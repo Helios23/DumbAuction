@@ -18,3 +18,6 @@ permissions:
     dumbauction.auction:
         default: true
         description: Allows /auction (and /bid)
+    dumbauction.admin:
+        default: op
+        description: Allows /auction <reload | cancel> (of non-owner auctions) and limit bypass
