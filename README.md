@@ -25,6 +25,8 @@ Commands
 
 `/auc toggle` - Toggles auction spam being sent to your chat
 
+`/auc reload` - Reloads the configuration
+
 
 Permissions
 ------
@@ -33,7 +35,7 @@ Permissions
 
 `dumbauction.admin` - Allows cancelling of auctions as an administrator. (/auc cancel on active auction, regardless of owner)
 
-`dumbauction.admin` will also bypass limits (besides the minimum limits).
+`dumbauction.admin` will also bypass limits (besides the minimum limits) and permit `/auc reload`.
 
 
 Background
