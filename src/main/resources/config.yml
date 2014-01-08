@@ -45,10 +45,8 @@ max-queue-size: 3
 # When someone bids high enough, sniping can be used to extend the time of the auction
 snipe:
 
-    # If a player bids at this percentage higher than the last bidder, the auction time is
-    # extended. By default this is at 30% meaning the player would have to bid 30% higher
-    # than the last bidder to extend the time.
-    min-percent: 30
+    # The amount of time required to bid since the last bidder to
+    time-left: 5
 
     # The amount of time to extend the auction by, on a snipe, in seconds
     extend-seconds: 10

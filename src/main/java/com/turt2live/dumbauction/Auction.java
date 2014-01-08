@@ -72,8 +72,12 @@ public class Auction {
             highBid = amount;
             highBidder = bidder;
             bids.put(bidder, amount);
+            // TODO: Reserve funds
             DumbAuction.p.broadcast(ChatColor.GREEN + bidder + ChatColor.AQUA + " has bid " + ChatColor.GREEN + DumbAuction.economy.format(amount));
-            // TODO: Sniping
+            if (secondsLeft <= DumbAuction.p.getConfig().getInt("snipe.time-left", 5)) {
+                DumbAuction.p.broadcast(ChatColor.LIGHT_PURPLE + "SNIPE! Auction time extended.");
+                extendTime(DumbAuction.p.getConfig().getLong("snipe.extend-seconds", 5));
+            }
             return true;
         }
         return false;
