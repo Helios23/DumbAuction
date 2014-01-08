@@ -23,7 +23,9 @@ public class AuctionManager extends BukkitRunnable {
     public boolean addAuction(Auction auction) {
         if (locked) return false;
         if (auction != null) {
-            return auctions.offer(auction);
+            if (auctions.offer(auction)) {
+                currentDowntime = 0; // Reset
+            }
         }
         return false;
     }
@@ -42,9 +44,9 @@ public class AuctionManager extends BukkitRunnable {
 
     public void cancel(Auction auction) {
         if (activeAuction != null && auction.getSeller().equalsIgnoreCase(activeAuction.getSeller())) {
-            activeAuction = null;
             currentDowntime = downtimeTicks;
             activeAuction.reward();
+            activeAuction = null;
         }
     }
 
@@ -66,14 +68,15 @@ public class AuctionManager extends BukkitRunnable {
                 Auction auction = auctions.poll();
                 if (auction != null) {
                     activeAuction = auction;
-                    activeAuction.start();
+                    activeAuction.onStart();
                 }
             }
             if (activeAuction != null) {
                 activeAuction.tick();
-                if (activeAuction.getSecondsLeft() <= 0) {
+                if (activeAuction.getSecondsLeft() < 0) {
                     currentDowntime = downtimeTicks;
                     activeAuction.reward();
+                    activeAuction = null;
                 }
             }
         }

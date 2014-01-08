@@ -26,10 +26,15 @@ public class DumbAuction extends JavaPlugin {
     public void onEnable() {
         p = this;
         saveDefaultConfig();
-        if (!setupEconomy()) {
-            getLogger().severe("COULD NOT SETUP VAULT ECONOMY! Disabling while you fix that.");
-            getServer().getPluginManager().disablePlugin(this);
-        }
+        getServer().getScheduler().runTask(this, new Runnable() {
+            @Override
+            public void run() {
+                if (!setupEconomy()) {
+                    getLogger().severe("COULD NOT SETUP VAULT ECONOMY! Disabling while you fix that.");
+                    getServer().getPluginManager().disablePlugin(p);
+                }
+            }
+        });
 
         auctions = new AuctionManager();
         toggles.add("toggle");
@@ -42,18 +47,12 @@ public class DumbAuction extends JavaPlugin {
         if (ignoreBroadcast == null) {
             ignoreBroadcast = new ArrayList<String>();
         }
-
-        // Easter eggs, for DBO
-        String easterEgg = ":o";
-        String fucknut = "drtshock";
-        String drtlovesme = "lolnope.";
-        String iKnowYouCanReadThisCauseYouAreReviewingIt = fucknut + " " + drtlovesme + " " + easterEgg;
     }
 
     @Override
     public void onDisable() {
         p = null;
-        auctions.stop(); // Returns items
+        if (auctions != null) auctions.stop(); // Returns items
     }
 
     @Override
@@ -106,8 +105,8 @@ public class DumbAuction extends JavaPlugin {
                                     }
 
                                     // Check two : Start price
-                                    if (time >= getConfig().getLong("min-start-cost", 10)) {
-                                        if (!player.hasPermission("dumbauction.admin") && time > getConfig().getLong("max-start-cost", 20000)) {
+                                    if (startPrice >= getConfig().getLong("min-start-cost", 10)) {
+                                        if (!player.hasPermission("dumbauction.admin") && startPrice > getConfig().getLong("max-start-cost", 20000)) {
                                             sendMessage(sender, ChatColor.RED + "Cost too large!");
                                             return true;
                                         }
@@ -117,8 +116,8 @@ public class DumbAuction extends JavaPlugin {
                                     }
 
                                     // Check three : Bid price
-                                    if (time >= getConfig().getLong("min-bid-cost", 10)) {
-                                        if (!player.hasPermission("dumbauction.admin") && time > getConfig().getLong("max-bid-cost", 20000)) {
+                                    if (increment >= getConfig().getLong("min-bid-cost", 10)) {
+                                        if (!player.hasPermission("dumbauction.admin") && increment > getConfig().getLong("max-bid-cost", 20000)) {
                                             sendMessage(sender, ChatColor.RED + "Bid increment too large!");
                                             return true;
                                         }
@@ -189,7 +188,8 @@ public class DumbAuction extends JavaPlugin {
                                                 break;
                                             }
                                         }
-                                        sendMessage(sender, ChatColor.GREEN + "Your auction has been queued as #" + (auctions.size() - 1));
+                                        economy.withdrawPlayer(sender.getName(),getConfig().getDouble("tax", 5));
+                                        sendMessage(sender, ChatColor.GREEN + "Your auction has been queued as #" + auctions.size());
                                     } else {
                                         sendMessage(sender, ChatColor.RED + "The queue is full!");
                                     }
@@ -251,8 +251,16 @@ public class DumbAuction extends JavaPlugin {
                                 sendMessage(sender, ChatColor.RED + "There is no active auction.");
                                 return true;
                             }
+                            if (auction.getSeller().equalsIgnoreCase(sender.getName())) {
+                                sendMessage(sender, ChatColor.RED + "You cannot bid on your own auction");
+                                return true;
+                            }
+                            if (auction.getHighBidder() != null && auction.getHighBidder().equalsIgnoreCase(sender.getName())) {
+                                sendMessage(sender, ChatColor.RED + "You are already the high bidder!");
+                                return true;
+                            }
                             try {
-                                double bid = args.length > 1 ? Double.parseDouble(args[1]) : auction.getHighBid() + auction.getBidIncrement();
+                                double bid = args.length > 1 ? Double.parseDouble(args[1]) : (auction.hasBids() ? auction.getHighBid() + auction.getBidIncrement() : auction.getStartAmount());
                                 if (DumbAuction.economy.has(sender.getName(), bid)) {
                                     if (!auction.bid(sender.getName(), bid)) {
                                         sendMessage(sender, ChatColor.RED + "Invalid bid! Please see the increment!");
@@ -279,7 +287,9 @@ public class DumbAuction extends JavaPlugin {
                 }
             }
         } else if (command.getName().equalsIgnoreCase("bid")) {
-            return getServer().dispatchCommand(sender, "auc bid");
+            String a = "";
+            for(String s : args)a+=s+" ";
+            return getServer().dispatchCommand(sender, "auc bid "+a.trim());
         } else {
             sendMessage(sender, ChatColor.RED + "Something broke.");
         }
