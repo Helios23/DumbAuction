@@ -69,10 +69,16 @@ public class Auction {
 
     public boolean bid(String bidder, double amount) {
         if (!hasBids() || (amount > highBid && amount - highBid >= bidIncrement)) {
+            // Refund last bidder
+            if (highBidder != null) DumbAuction.economy.depositPlayer(highBidder, highBid);
             highBid = amount;
             highBidder = bidder;
             bids.put(bidder, amount);
-            // TODO: Reserve funds
+
+            // Reserve funds
+            DumbAuction.economy.withdrawPlayer(highBidder, highBid);
+
+            // Broadcast & detect snipe
             DumbAuction.p.broadcast(ChatColor.GREEN + bidder + ChatColor.AQUA + " has bid " + ChatColor.GREEN + DumbAuction.economy.format(amount));
             if (secondsLeft <= DumbAuction.p.getConfig().getInt("snipe.time-left", 5)) {
                 DumbAuction.p.broadcast(ChatColor.LIGHT_PURPLE + "SNIPE! Auction time extended.");
@@ -119,8 +125,7 @@ public class Auction {
             }
             plugin.broadcast(ChatColor.GREEN + player.getName() + " has won the auction for " + ChatColor.YELLOW + name + ChatColor.GREEN + " at " + ChatColor.YELLOW + DumbAuction.economy.format(highBid));
 
-            // xfer money
-            DumbAuction.economy.withdrawPlayer(highBidder, highBid);
+            // Transfer money
             DumbAuction.economy.depositPlayer(seller, highBid);
             return;
         }
