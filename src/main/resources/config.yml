@@ -9,7 +9,11 @@
 prefix: '&7[DumbAuction]'
 
 # Amount of tax per auction
-tax: 5
+tax:
+    # If true, 'cost' represents the percentage of the starting price for the auction.
+    # If false, 'cost' is a flat rate
+    is-percent: false
+    cost: 5
 
 # Default auction time (in seconds)
 default-time-seconds: 30

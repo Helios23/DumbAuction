@@ -151,7 +151,8 @@ public class DumbAuction extends JavaPlugin {
                                     // Create auction
                                     Auction auction = new Auction(player.getName(), increment, startPrice, time, proper);
 
-                                    if (!DumbAuction.economy.has(player.getName(), getConfig().getDouble("tax", 5))) {
+                                    double taxCost = getConfig().getBoolean("tax.is-percent", false) ? (getConfig().getDouble("tax.cost", 5) / 100) * startPrice : getConfig().getDouble("tax.cost", 5);
+                                    if (!DumbAuction.economy.has(player.getName(), taxCost)) {
                                         sendMessage(sender, ChatColor.RED + "You cannot afford the tax!");
                                         return true;
                                     }
@@ -188,7 +189,7 @@ public class DumbAuction extends JavaPlugin {
                                                 break;
                                             }
                                         }
-                                        economy.withdrawPlayer(sender.getName(),getConfig().getDouble("tax", 5));
+                                        economy.withdrawPlayer(sender.getName(), taxCost);
                                         sendMessage(sender, ChatColor.GREEN + "Your auction has been queued as #" + auctions.size());
                                     } else {
                                         sendMessage(sender, ChatColor.RED + "The queue is full!");
@@ -288,8 +289,8 @@ public class DumbAuction extends JavaPlugin {
             }
         } else if (command.getName().equalsIgnoreCase("bid")) {
             String a = "";
-            for(String s : args)a+=s+" ";
-            return getServer().dispatchCommand(sender, "auc bid "+a.trim());
+            for (String s : args) a += s + " ";
+            return getServer().dispatchCommand(sender, "auc bid " + a.trim());
         } else {
             sendMessage(sender, ChatColor.RED + "Something broke.");
         }
