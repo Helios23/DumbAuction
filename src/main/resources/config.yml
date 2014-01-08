@@ -48,3 +48,7 @@ snipe:
 
     # The amount of time to extend the auction by, on a snipe, in seconds
     extend-seconds: 10
+
+# Add items here to rename them from the Bukkit name, eg: DIAMOND_SWORD: 'Diamond Stick' to make "Diamond Stick" appear
+# instaed of "Diamond Sword".
+aliases:

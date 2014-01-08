@@ -1,5 +1,5 @@
 name: DumbAuction
-main: com.turt2live.dumb.DumbAuction
+main: com.turt2live.dumbauction.DumbAuction
 version: maven-version-number bjenkins-build-number
 description: I hate downloading plugins.
 author: turt2live

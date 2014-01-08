@@ -1,4 +1,4 @@
-package com.turt2live.dumb;
+package com.turt2live.dumbauction;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
@@ -171,6 +171,24 @@ public class DumbAuction extends JavaPlugin {
 
                                     // Register auction
                                     if (auctions.addAuction(auction)) {
+                                        int removed = 0;
+                                        for (int slot = 0; slot < player.getInventory().getSize(); slot++) {
+                                            ItemStack item = player.getInventory().getItem(slot);
+                                            if (item != null) {
+                                                if (item.isSimilar(hand)) {
+                                                    if (removed + item.getAmount() > amount) {
+                                                        item.setAmount((removed + item.getAmount()) - amount);
+                                                        player.getInventory().setItem(slot, item);
+                                                    } else {
+                                                        player.getInventory().setItem(slot, null);
+                                                    }
+                                                    removed += item.getAmount();
+                                                }
+                                            }
+                                            if (removed >= amount) {
+                                                break;
+                                            }
+                                        }
                                         sendMessage(sender, ChatColor.GREEN + "Your auction has been queued as #" + (auctions.size() - 1));
                                     } else {
                                         sendMessage(sender, ChatColor.RED + "The queue is full!");
@@ -237,7 +255,7 @@ public class DumbAuction extends JavaPlugin {
                                 double bid = args.length > 1 ? Double.parseDouble(args[1]) : auction.getHighBid() + auction.getBidIncrement();
                                 if (DumbAuction.economy.has(sender.getName(), bid)) {
                                     if (!auction.bid(sender.getName(), bid)) {
-                                        sendMessage(sender, ChatColor.RED + "Invalid bid!");
+                                        sendMessage(sender, ChatColor.RED + "Invalid bid! Please see the increment!");
                                     }
                                 } else {
                                     sendMessage(sender, ChatColor.RED + "You cannot afford that!");
@@ -299,6 +317,21 @@ public class DumbAuction extends JavaPlugin {
         }
         economy = rsp.getProvider();
         return economy != null;
+    }
+
+    public static String getName(Material name) {
+        String def = name.name();
+        if (p.getConfig().getString("aliases." + name.name()) != null) {
+            return p.getConfig().getString("aliases." + name.name());
+        }
+
+        String[] parts = def.split("_");
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < parts.length; i++) {
+            builder.append(parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase());
+            builder.append(" ");
+        }
+        return builder.toString().trim();
     }
 
 }

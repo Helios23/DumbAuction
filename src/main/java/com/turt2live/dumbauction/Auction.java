@@ -1,10 +1,11 @@
-package com.turt2live.dumb;
+package com.turt2live.dumbauction;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 import java.util.List;
@@ -155,13 +156,42 @@ public class Auction {
     }
 
     public void start() {
-        // TODO: Start broadcast
-        DumbAuction.p.broadcast(ChatColor.YELLOW + "An auction has started!");
+        int total = 0;
+        String name = DumbAuction.getName(items.get(0).getType());
+        for (ItemStack stack : items) {
+            total += stack.getAmount();
+            ItemMeta meta = stack.getItemMeta();
+            if (meta != null && meta.hasDisplayName()) {
+                name = ChatColor.ITALIC + meta.getDisplayName();
+            }
+        }
+        DumbAuction.p.broadcast(ChatColor.GOLD + seller + ChatColor.YELLOW + " is selling " + ChatColor.GOLD + "" + total + "x " + name);
+        DumbAuction.p.broadcast(ChatColor.GRAY + "Starting Price: " + ChatColor.AQUA + DumbAuction.economy.format(startAmount) + ChatColor.GRAY + " Bid Increment: " + ChatColor.AQUA + DumbAuction.economy.format(bidIncrement));
     }
 
     public void info(CommandSender sender, boolean quick) {
+        int total = 0;
+        String name = DumbAuction.getName(items.get(0).getType());
+        for (ItemStack stack : items) {
+            total += stack.getAmount();
+            ItemMeta meta = stack.getItemMeta();
+            if (meta != null && meta.hasDisplayName()) {
+                name = ChatColor.ITALIC + meta.getDisplayName();
+            }
+        }
+
         // quick = true ? showqueue : info
-        // TODO: Info
+        if (quick) {
+            DumbAuction.p.sendMessage(sender, ChatColor.GOLD + seller + ChatColor.YELLOW + " is selling " + ChatColor.GOLD + "" + total + "x " + name);
+        } else {
+            DumbAuction.p.sendMessage(sender, ChatColor.GOLD + seller + ChatColor.YELLOW + " is selling " + ChatColor.GOLD + "" + total + "x " + name);
+            DumbAuction.p.sendMessage(sender, ChatColor.GRAY + "Starting Price: " + ChatColor.AQUA + DumbAuction.economy.format(startAmount) + ChatColor.GRAY + " Bid Increment: " + ChatColor.AQUA + DumbAuction.economy.format(bidIncrement));
+            if (highBidder != null) {
+                DumbAuction.p.sendMessage(sender, ChatColor.GREEN + highBidder + " has the high bid at " + DumbAuction.economy.format(highBid));
+            } else {
+                DumbAuction.p.sendMessage(sender, ChatColor.GREEN + "No bids!");
+            }
+        }
     }
 
     public void cancel(AuctionManager manager) {

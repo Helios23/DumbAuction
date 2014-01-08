@@ -1,4 +1,4 @@
-package com.turt2live.dumb;
+package com.turt2live.dumbauction;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
