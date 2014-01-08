@@ -101,7 +101,7 @@ public class Auction {
     public void reward() {
         DumbAuction plugin = DumbAuction.p;
         if (bids.size() > 0) {
-            String name = DumbAuction.getName(items.get(0).getType());
+            String name = DumbAuction.getName(items.get(0));
             for (ItemStack stack : items) {
                 ItemMeta meta = stack.getItemMeta();
                 if (meta != null && meta.hasDisplayName()) {
@@ -149,7 +149,7 @@ public class Auction {
 
     public void onStart() {
         int total = 0;
-        String name = DumbAuction.getName(items.get(0).getType());
+        String name = DumbAuction.getName(items.get(0));
         for (ItemStack stack : items) {
             total += stack.getAmount();
             ItemMeta meta = stack.getItemMeta();
@@ -164,7 +164,7 @@ public class Auction {
 
     public void info(CommandSender sender, boolean quick) {
         int total = 0;
-        String name = DumbAuction.getName(items.get(0).getType());
+        String name = DumbAuction.getName(items.get(0));
         for (ItemStack stack : items) {
             total += stack.getAmount();
             ItemMeta meta = stack.getItemMeta();

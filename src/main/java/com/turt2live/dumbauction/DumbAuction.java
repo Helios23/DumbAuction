@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,6 +22,7 @@ public class DumbAuction extends JavaPlugin {
     private List<String> toggles = new ArrayList<String>();
     private AuctionManager auctions;
     private List<String> ignoreBroadcast = new ArrayList<String>();
+    private WhatIsItHook whatHook;
 
     @Override
     public void onEnable() {
@@ -42,6 +44,10 @@ public class DumbAuction extends JavaPlugin {
         toggles.add("silence");
         toggles.add("ignore");
         toggles.add("quiet");
+
+        if (getServer().getPluginManager().getPlugin("WhatIsIt") != null) {
+            whatHook = new WhatIsItHook();
+        }
 
         ignoreBroadcast = getConfig().getStringList("ignore-broadcast");
         if (ignoreBroadcast == null) {
@@ -330,10 +336,21 @@ public class DumbAuction extends JavaPlugin {
         return economy != null;
     }
 
-    public static String getName(Material name) {
-        String def = name.name();
-        if (p.getConfig().getString("aliases." + name.name()) != null) {
-            return p.getConfig().getString("aliases." + name.name());
+    public static String getName(ItemStack stack) {
+        String def = stack.getType().name();
+        if (p.whatHook != null) {
+            def = p.whatHook.getName(stack);
+        } else {
+            if (p.getConfig().getString("aliases." + stack.getType().name()) != null) {
+                def = p.getConfig().getString("aliases." + stack.getType().name());
+            }
+        }
+
+        if (stack.hasItemMeta()) {
+            ItemMeta meta = stack.getItemMeta();
+            if (meta.hasDisplayName()) {
+                def = meta.getDisplayName();
+            }
         }
 
         String[] parts = def.split("_");

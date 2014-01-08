@@ -52,5 +52,5 @@ snipe:
     extend-seconds: 10
 
 # Add items here to rename them from the Bukkit name, eg: DIAMOND_SWORD: 'Diamond Stick' to make "Diamond Stick" appear
-# instaed of "Diamond Sword".
+# instaed of "Diamond Sword". If you have WhatIsIt on your server, that is used instead.
 aliases:
