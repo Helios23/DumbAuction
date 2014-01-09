@@ -1,5 +1,6 @@
 package com.turt2live.dumbauction;
 
+import com.turt2live.commonsense.DumbPlugin;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,12 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DumbAuction extends JavaPlugin {
+public class DumbAuction extends DumbPlugin {
 
     public static DumbAuction p;
     public static Economy economy;
@@ -37,6 +37,7 @@ public class DumbAuction extends JavaPlugin {
                 }
             }
         });
+        initCommonSense(72073);
 
         auctions = new AuctionManager();
         toggles.add("toggle");
