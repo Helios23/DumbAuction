@@ -108,7 +108,6 @@ public class Auction {
                     name = ChatColor.ITALIC + meta.getDisplayName();
                 }
             }
-            // TODO: Offline mode winnings?
             Player player = plugin.getServer().getPlayerExact(highBidder);
             if (player != null) {
                 HashMap<Integer, ItemStack> overflow = player.getInventory().addItem(items.toArray(new ItemStack[0]));

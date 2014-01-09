@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class DumbAuction extends DumbPlugin {
     private AuctionManager auctions;
     private List<String> ignoreBroadcast = new ArrayList<String>();
     private WhatIsItHook whatHook;
+    private OfflineQueue queue;
 
     @Override
     public void onEnable() {
@@ -56,12 +58,23 @@ public class DumbAuction extends DumbPlugin {
         if (ignoreBroadcast == null) {
             ignoreBroadcast = new ArrayList<String>();
         }
+
+        try {
+            queue = new OfflineQueue(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onDisable() {
         p = null;
         if (auctions != null) auctions.stop(); // Returns items
+        if (queue != null) try {
+            queue.save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -304,6 +317,10 @@ public class DumbAuction extends DumbPlugin {
             sendMessage(sender, ChatColor.RED + "Something broke.");
         }
         return true;
+    }
+
+    public OfflineQueue getQueue() {
+        return queue;
     }
 
     public AuctionManager getAuctionManager() {
