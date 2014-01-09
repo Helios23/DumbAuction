@@ -20,6 +20,20 @@ public class AuctionManager extends BukkitRunnable {
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 20L, 20L);
     }
 
+    public int getQueuePosition(String seller){
+        if(activeAuction!=null&&activeAuction.getSeller().equalsIgnoreCase(seller)){
+            return 0;
+        }
+        int i=1;
+        for(Auction auc : auctions){
+            if(auc.getSeller().equalsIgnoreCase(seller)){
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
     public boolean addAuction(Auction auction) {
         if (locked) return false;
         if (auction != null) {

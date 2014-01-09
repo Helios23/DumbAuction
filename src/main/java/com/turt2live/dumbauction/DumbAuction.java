@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,6 +14,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DumbAuction extends DumbPlugin {
 
@@ -304,6 +306,10 @@ public class DumbAuction extends DumbPlugin {
         return true;
     }
 
+    public AuctionManager getAuctionManager() {
+        return auctions;
+    }
+
     private void showAucHelp(CommandSender sender, int n) {
         String base = ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc start <start price> <increment>";
         if (n >= 3) base += " <time>";
@@ -363,4 +369,42 @@ public class DumbAuction extends DumbPlugin {
         return builder.toString().trim();
     }
 
+    public static void displayItem(CommandSender sender, ItemStack stack, int amount) {
+        sender.sendMessage(ChatColor.BLUE + getName(stack) + ChatColor.BLUE + " x" + amount);
+        if (stack.hasItemMeta()) {
+            ItemMeta meta = stack.getItemMeta();
+            if (meta.hasDisplayName()) {
+                String def = stack.getType().name();
+                if (p.whatHook != null) {
+                    def = p.whatHook.getName(stack);
+                } else {
+                    if (p.getConfig().getString("aliases." + stack.getType().name()) != null) {
+                        def = p.getConfig().getString("aliases." + stack.getType().name());
+                    }
+                }
+                String[] parts = def.split("_");
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < parts.length; i++) {
+                    builder.append(parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase());
+                    builder.append(" ");
+                }
+                def = builder.toString().trim();
+                p.sendMessage(sender, ChatColor.DARK_AQUA + "Real Item Type: " + def);
+            }
+            if (meta.hasLore()) {
+                p.sendMessage(sender, ChatColor.LIGHT_PURPLE + "Lore: ");
+                for (String s : meta.getLore()) {
+                    p.sendMessage(sender, "  " + s);
+                }
+                p.sendMessage(sender, " ");
+            }
+        }
+        if (stack.getEnchantments() != null && !stack.getEnchantments().isEmpty()) {
+            Map<Enchantment, Integer> enchants = stack.getEnchantments();
+            for (Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
+                String enchantName = Items.getEnchantmentName(e);
+                p.sendMessage(sender, ChatColor.AQUA + enchantName);
+            }
+        }
+    }
 }

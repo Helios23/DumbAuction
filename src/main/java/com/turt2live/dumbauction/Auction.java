@@ -175,10 +175,8 @@ public class Auction {
 
         // quick ? showqueue : info
         if (quick) {
-            // TODO: Prepend auction place in queue
-            DumbAuction.p.sendMessage(sender, ChatColor.GOLD + seller + ChatColor.YELLOW + " is selling " + ChatColor.GOLD + "" + total + "x " + name);
+            DumbAuction.p.sendMessage(sender, ChatColor.AQUA + "#" + DumbAuction.p.getAuctionManager().getQueuePosition(getSeller()) + " " + ChatColor.GOLD + seller + ChatColor.YELLOW + " is selling " + ChatColor.GOLD + "" + total + "x " + name);
         } else {
-            // TODO: real item name, enchants, meta, time left, etc
             DumbAuction.p.sendMessage(sender, ChatColor.GOLD + seller + ChatColor.YELLOW + " is selling " + ChatColor.GOLD + "" + total + "x " + name);
             DumbAuction.p.sendMessage(sender, ChatColor.GRAY + "Starting Price: " + ChatColor.AQUA + DumbAuction.economy.format(startAmount) + ChatColor.GRAY + " Bid Increment: " + ChatColor.AQUA + DumbAuction.economy.format(bidIncrement));
             if (highBidder != null) {
@@ -186,6 +184,7 @@ public class Auction {
             } else {
                 DumbAuction.p.sendMessage(sender, ChatColor.GREEN + "No bids!");
             }
+            DumbAuction.displayItem(sender, items.get(0), total);
         }
     }
 
