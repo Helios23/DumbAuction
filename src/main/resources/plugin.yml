@@ -6,7 +6,7 @@ author: turt2live
 website: http://github.com/turt2live/DumbAuction
 build: jenkins-build-number
 depend: [Vault]
-softdepend: [WhatIsIt]
+softdepend: [WhatIsIt, MobArena]
 commands:
     auction:
         aliases: [auc]

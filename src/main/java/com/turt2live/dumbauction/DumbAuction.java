@@ -27,6 +27,7 @@ public class DumbAuction extends DumbPlugin {
     private List<String> ignoreBroadcast = new ArrayList<String>();
     private WhatIsItHook whatHook;
     private OfflineQueue queue;
+    private MobArenaHook maHook;
 
     @Override
     public void onEnable() {
@@ -52,6 +53,10 @@ public class DumbAuction extends DumbPlugin {
 
         if (getServer().getPluginManager().getPlugin("WhatIsIt") != null) {
             whatHook = new WhatIsItHook();
+        }
+
+        if (getServer().getPluginManager().getPlugin("MobArena") != null) {
+            maHook = new MobArenaHook();
         }
 
         ignoreBroadcast = getConfig().getStringList("ignore-broadcast");
@@ -84,6 +89,10 @@ public class DumbAuction extends DumbPlugin {
                 sendMessage(sender, ChatColor.RED + "No permission.");
             } else {
                 if (sender instanceof Player) {
+                    if (maHook != null && maHook.isInArena(this, (Player) sender)) {
+                        sendMessage(sender, ChatColor.RED + "You cannot do that in a MobArena!");
+                        return true;
+                    }
                     if (args.length < 1) {
                         sendMessage(sender, ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc <start | info | showqueue | cancel | toggle | bid>" + ChatColor.RED + "?");
                     } else {
