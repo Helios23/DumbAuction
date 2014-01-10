@@ -5,7 +5,8 @@ description: I hate downloading plugins.
 author: turt2live
 website: http://github.com/turt2live/DumbAuction
 build: jenkins-build-number
-depend: [Vault, WhatIsIt]
+depend: [Vault]
+softdepend: [WhatIsIt]
 commands:
     auction:
         aliases: [auc]
