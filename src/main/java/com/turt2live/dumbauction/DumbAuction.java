@@ -106,133 +106,130 @@ public class DumbAuction extends DumbPlugin {
                                 sendMessage(sender, ChatColor.RED + "You must be listening to auctions to do that.");
                                 return true;
                             }
-                            if (args.length < 2) {
-                                showAucHelp(sender, args.length);
-                            } else {
-                                Player player = (Player) sender;
-                                try {
-                                    ItemStack hand = player.getItemInHand();
-                                    if (hand == null || hand.getType() == Material.AIR) {
-                                        sendMessage(sender, ChatColor.RED + "You are not holding anything to sell!");
+                            Player player = (Player) sender;
+                            try {
+                                ItemStack hand = player.getItemInHand();
+                                if (hand == null || hand.getType() == Material.AIR) {
+                                    sendMessage(sender, ChatColor.RED + "You are not holding anything to sell!");
+                                    return true;
+                                }
+                                int found = 0;
+                                List<ItemStack> valid = new ArrayList<ItemStack>();
+                                for (ItemStack stack : player.getInventory().getContents()) {
+                                    if (stack != null && stack.isSimilar(hand)) {
+                                        found += stack.getAmount();
+                                        valid.add(stack);
+                                    }
+                                }
+                                // auc [0]start [1]amount [2]start [3]bid [4]time
+                                double startPrice = args.length > 2 ? Double.parseDouble(args[2]) : getConfig().getDouble("default-start-price", 100);
+                                double increment = args.length > 3 ? Double.parseDouble(args[3]) : getConfig().getDouble("default-bid-increment", 100);
+                                long time = args.length > 4 ? Long.parseLong(args[4]) : getConfig().getLong("default-time-seconds", 30);
+                                int amount = args.length > 1 ? (args[1].equalsIgnoreCase("*") || args[1].equalsIgnoreCase("all") ? found : Integer.parseInt(args[1])) : hand.getAmount();
+
+                                // Check one : Time limit
+                                if (time >= getConfig().getLong("min-auction-time", 10)) {
+                                    if (!player.hasPermission("dumbauction.admin") && time > getConfig().getLong("max-auction-time", 60)) {
+                                        sendMessage(sender, ChatColor.RED + "Time too large!");
                                         return true;
                                     }
-                                    int found = 0;
-                                    List<ItemStack> valid = new ArrayList<ItemStack>();
-                                    for (ItemStack stack : player.getInventory().getContents()) {
-                                        if (stack != null && stack.isSimilar(hand)) {
-                                            found += stack.getAmount();
-                                            valid.add(stack);
-                                        }
-                                    }
-                                    double startPrice = Double.parseDouble(args[1]);
-                                    double increment = Double.parseDouble(args[2]);
-                                    long time = args.length > 3 ? Long.parseLong(args[3]) : getConfig().getLong("default-time-seconds", 30);
-                                    int amount = args.length > 4 ? (args[4].equalsIgnoreCase("*") || args[4].equalsIgnoreCase("all") ? found : Integer.parseInt(args[4])) : hand.getAmount();
+                                } else {
+                                    sendMessage(sender, ChatColor.RED + "Time too small!");
+                                    return true;
+                                }
 
-                                    // Check one : Time limit
-                                    if (time >= getConfig().getLong("min-auction-time", 10)) {
-                                        if (!player.hasPermission("dumbauction.admin") && time > getConfig().getLong("max-auction-time", 60)) {
-                                            sendMessage(sender, ChatColor.RED + "Time too large!");
-                                            return true;
-                                        }
-                                    } else {
-                                        sendMessage(sender, ChatColor.RED + "Time too small!");
+                                // Check two : Start price
+                                if (startPrice >= getConfig().getLong("min-start-cost", 10)) {
+                                    if (!player.hasPermission("dumbauction.admin") && startPrice > getConfig().getLong("max-start-cost", 20000)) {
+                                        sendMessage(sender, ChatColor.RED + "Cost too large!");
                                         return true;
                                     }
+                                } else {
+                                    sendMessage(sender, ChatColor.RED + "Cost too small!");
+                                    return true;
+                                }
 
-                                    // Check two : Start price
-                                    if (startPrice >= getConfig().getLong("min-start-cost", 10)) {
-                                        if (!player.hasPermission("dumbauction.admin") && startPrice > getConfig().getLong("max-start-cost", 20000)) {
-                                            sendMessage(sender, ChatColor.RED + "Cost too large!");
-                                            return true;
-                                        }
-                                    } else {
-                                        sendMessage(sender, ChatColor.RED + "Cost too small!");
+                                // Check three : Bid price
+                                if (increment >= getConfig().getLong("min-bid-cost", 10)) {
+                                    if (!player.hasPermission("dumbauction.admin") && increment > getConfig().getLong("max-bid-cost", 20000)) {
+                                        sendMessage(sender, ChatColor.RED + "Bid increment too large!");
                                         return true;
                                     }
+                                } else {
+                                    sendMessage(sender, ChatColor.RED + "Bid increment too small!");
+                                    return true;
+                                }
 
-                                    // Check three : Bid price
-                                    if (increment >= getConfig().getLong("min-bid-cost", 10)) {
-                                        if (!player.hasPermission("dumbauction.admin") && increment > getConfig().getLong("max-bid-cost", 20000)) {
-                                            sendMessage(sender, ChatColor.RED + "Bid increment too large!");
-                                            return true;
-                                        }
-                                    } else {
-                                        sendMessage(sender, ChatColor.RED + "Bid increment too small!");
-                                        return true;
+                                // Check four : Enough items?
+                                if (found < amount) {
+                                    sendMessage(sender, ChatColor.RED + "You do not have enough of that item!");
+                                    return true;
+                                }
+
+                                // Create a list of proper items (the one's we're taking)
+                                List<ItemStack> proper = new ArrayList<ItemStack>();
+                                int taken = 0;
+                                for (ItemStack itemStack : valid) {
+                                    int newTaken = taken + itemStack.getAmount();
+                                    ItemStack stack = itemStack;
+                                    if (newTaken > amount) {
+                                        stack = itemStack.clone();
+                                        stack.setAmount(amount - taken);
+                                        newTaken = amount;
                                     }
+                                    proper.add(stack);
+                                    taken = newTaken;
+                                    if (taken > amount) break;
+                                }
 
-                                    // Check four : Enough items?
-                                    if (found < amount) {
-                                        sendMessage(sender, ChatColor.RED + "You do not have enough of that item!");
-                                        return true;
-                                    }
+                                // Create auction
+                                Auction auction = new Auction(player.getName(), increment, startPrice, time, proper);
 
-                                    // Create a list of proper items (the one's we're taking)
-                                    List<ItemStack> proper = new ArrayList<ItemStack>();
-                                    int taken = 0;
-                                    for (ItemStack itemStack : valid) {
-                                        int newTaken = taken + itemStack.getAmount();
-                                        ItemStack stack = itemStack;
-                                        if (newTaken > amount) {
-                                            stack = itemStack.clone();
-                                            stack.setAmount(amount - taken);
-                                            newTaken = amount;
-                                        }
-                                        proper.add(stack);
-                                        taken = newTaken;
-                                        if (taken > amount) break;
-                                    }
+                                double taxCost = getConfig().getBoolean("tax.is-percent", false) ? (getConfig().getDouble("tax.cost", 5) / 100) * startPrice : getConfig().getDouble("tax.cost", 5);
+                                if (!DumbAuction.economy.has(player.getName(), taxCost)) {
+                                    sendMessage(sender, ChatColor.RED + "You cannot afford the tax!");
+                                    return true;
+                                }
 
-                                    // Create auction
-                                    Auction auction = new Auction(player.getName(), increment, startPrice, time, proper);
-
-                                    double taxCost = getConfig().getBoolean("tax.is-percent", false) ? (getConfig().getDouble("tax.cost", 5) / 100) * startPrice : getConfig().getDouble("tax.cost", 5);
-                                    if (!DumbAuction.economy.has(player.getName(), taxCost)) {
-                                        sendMessage(sender, ChatColor.RED + "You cannot afford the tax!");
-                                        return true;
-                                    }
-
-                                    // Do they already have an auction?
-                                    for (Auction auction1 : auctions.getAuctions()) {
-                                        if (auction1.getSeller().equalsIgnoreCase(sender.getName())) {
-                                            sendMessage(sender, ChatColor.RED + "You already have an auction in queue!");
-                                            return true;
-                                        }
-                                    }
-                                    if (auctions.getActiveAuction() != null && auctions.getActiveAuction().getSeller().equalsIgnoreCase(sender.getName())) {
+                                // Do they already have an auction?
+                                for (Auction auction1 : auctions.getAuctions()) {
+                                    if (auction1.getSeller().equalsIgnoreCase(sender.getName())) {
                                         sendMessage(sender, ChatColor.RED + "You already have an auction in queue!");
                                         return true;
                                     }
+                                }
+                                if (auctions.getActiveAuction() != null && auctions.getActiveAuction().getSeller().equalsIgnoreCase(sender.getName())) {
+                                    sendMessage(sender, ChatColor.RED + "You already have an auction in queue!");
+                                    return true;
+                                }
 
-                                    // Register auction
-                                    if (auctions.addAuction(auction)) {
-                                        int removed = 0;
-                                        for (int slot = 0; slot < player.getInventory().getSize(); slot++) {
-                                            ItemStack item = player.getInventory().getItem(slot);
-                                            if (item != null) {
-                                                if (item.isSimilar(hand)) {
-                                                    if (removed + item.getAmount() > amount) {
-                                                        item.setAmount((removed + item.getAmount()) - amount);
-                                                        player.getInventory().setItem(slot, item);
-                                                    } else {
-                                                        player.getInventory().setItem(slot, null);
-                                                    }
-                                                    removed += item.getAmount();
+                                // Register auction
+                                if (auctions.addAuction(auction)) {
+                                    int removed = 0;
+                                    for (int slot = 0; slot < player.getInventory().getSize(); slot++) {
+                                        ItemStack item = player.getInventory().getItem(slot);
+                                        if (item != null) {
+                                            if (item.isSimilar(hand)) {
+                                                if (removed + item.getAmount() > amount) {
+                                                    item.setAmount((removed + item.getAmount()) - amount);
+                                                    player.getInventory().setItem(slot, item);
+                                                } else {
+                                                    player.getInventory().setItem(slot, null);
                                                 }
-                                            }
-                                            if (removed >= amount) {
-                                                break;
+                                                removed += item.getAmount();
                                             }
                                         }
-                                        economy.withdrawPlayer(sender.getName(), taxCost);
-                                        sendMessage(sender, ChatColor.GREEN + "Your auction has been queued as #" + auctions.size());
-                                    } else {
-                                        sendMessage(sender, ChatColor.RED + "The queue is full!");
+                                        if (removed >= amount) {
+                                            break;
+                                        }
                                     }
-                                } catch (NumberFormatException e) {
-                                    showAucHelp(sender, args.length);
+                                    economy.withdrawPlayer(sender.getName(), taxCost);
+                                    sendMessage(sender, ChatColor.GREEN + "Your auction has been queued as #" + auctions.size());
+                                } else {
+                                    sendMessage(sender, ChatColor.RED + "The queue is full!");
                                 }
+                            } catch (NumberFormatException e) {
+                                showAucHelp(sender, args.length);
                             }
                         } else if (args[0].equalsIgnoreCase("info")) {
                             if (ignoreBroadcast.contains(sender.getName())) {
@@ -344,14 +341,16 @@ public class DumbAuction extends DumbPlugin {
         return auctions;
     }
 
-    public MobArenaHook getMobArena(){
+    public MobArenaHook getMobArena() {
         return maHook;
     }
 
     private void showAucHelp(CommandSender sender, int n) {
-        String base = ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc start <start price> <increment>";
-        if (n >= 3) base += " <time>";
-        if (n >= 4) base += " <amount>";
+        String base = ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc start";
+        if (n >= 2) base += " [amount]";
+        if (n >= 3) base += " [starting price]";
+        if (n >= 4) base += " [bid increment]";
+        if (n >= 5) base += " [time]";
         base += ChatColor.RED + "?";
         sendMessage(sender, base);
     }

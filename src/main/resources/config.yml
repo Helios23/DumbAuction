@@ -18,6 +18,12 @@ tax:
 # Default auction time (in seconds)
 default-time-seconds: 30
 
+# Default starting price
+default-start-price: 100
+
+# Default bid increment
+default-bid-increment: 100
+
 # Seconds between auctions. This is a cooldown. Set to '0' to disable.
 seconds-between-auctions: 15
 

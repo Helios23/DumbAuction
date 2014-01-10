@@ -11,11 +11,7 @@ Auctions. Integrates with vault. No other crap.
 Commands
 -------
 
-`/auc start <startPrice> <increment> ` - Starts an auction with the default time for your current item in-hand
-
-`/auc start <startPrice> <increment> <time>` - Starts an auction with your current hand for <time> seconds
-
-`/auc start <startPrice> <increment> <time> <amount>` - Starts an auction of <amount> for <time> off your current hand
+`/auc start [amount] [startPrice] [increment] [time] ` - Starts an auction
 
 `/auc info` - Shows current auction infor
 
