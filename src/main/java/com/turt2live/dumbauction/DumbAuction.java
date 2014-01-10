@@ -122,7 +122,7 @@ public class DumbAuction extends DumbPlugin {
                                     double startPrice = Double.parseDouble(args[1]);
                                     double increment = Double.parseDouble(args[2]);
                                     long time = args.length > 3 ? Long.parseLong(args[3]) : getConfig().getLong("default-time-seconds", 30);
-                                    int amount = args.length > 4 ? (args[4].equalsIgnoreCase("*") ? found : Integer.parseInt(args[4])) : hand.getAmount();
+                                    int amount = args.length > 4 ? (args[4].equalsIgnoreCase("*") || args[4].equalsIgnoreCase("all") ? found : Integer.parseInt(args[4])) : hand.getAmount();
 
                                     // Check one : Time limit
                                     if (time >= getConfig().getLong("min-auction-time", 10)) {
