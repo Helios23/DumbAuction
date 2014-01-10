@@ -310,9 +310,12 @@ public class DumbAuction extends DumbPlugin {
                 }
             }
         } else if (command.getName().equalsIgnoreCase("bid")) {
-            String a = "";
-            for (String s : args) a += s + " ";
-            return getServer().dispatchCommand(sender, "auc bid " + a.trim());
+            String[] newArgs = new String[args.length + 1];
+            newArgs[0] = "bid";
+            for (int i = 0; i < newArgs.length - 1; i++) {
+                newArgs[i + 1] = args[i];
+            }
+            return onCommand(sender, getCommand("auction"), "auction", newArgs);
         } else {
             sendMessage(sender, ChatColor.RED + "Something broke.");
         }
