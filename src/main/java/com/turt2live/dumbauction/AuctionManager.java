@@ -17,7 +17,7 @@ public class AuctionManager extends BukkitRunnable {
     private Auction activeAuction;
 
     public AuctionManager() {
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 20L, 20L);
+        this.runTaskTimer(plugin, 20L, 20L);
     }
 
     public int getQueuePosition(String seller) {
