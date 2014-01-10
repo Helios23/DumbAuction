@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class MobArenaHook implements Listener {
 
-    private final String enableNode = "hooks.mobarena.disable-auction-command-in-arena";
+    private final String enableNode = "hooks.mobarena.protect";
     private MobArenaHandler handler;
     private Map<String, List<ItemStack>> winnings = new HashMap<String, List<ItemStack>>();
     private Map<String, List<ItemStack>> failed = new HashMap<String, List<ItemStack>>();

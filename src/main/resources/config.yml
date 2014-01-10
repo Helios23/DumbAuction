@@ -55,8 +55,9 @@ snipe:
 hooks:
     mobarena:
         # By settings this to true you can stop people from posting an auction, going to the arena, then
-        # cancelling it to get items.
-        disable-auction-command-in-arena: true
+        # cancelling it to get items. This will also, if true, stop players from auctioning MobArena kits
+        # and getting items while in an arena.
+        protect: true
 
 # Add items here to rename them from the Bukkit name, eg: DIAMOND_SWORD: 'Diamond Stick' to make "Diamond Stick" appear
 # instaed of "Diamond Sword". If you have WhatIsIt on your server, that is used instead.
