@@ -20,13 +20,13 @@ public class AuctionManager extends BukkitRunnable {
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 20L, 20L);
     }
 
-    public int getQueuePosition(String seller){
-        if(activeAuction!=null&&activeAuction.getSeller().equalsIgnoreCase(seller)){
+    public int getQueuePosition(String seller) {
+        if (activeAuction != null && activeAuction.getSeller().equalsIgnoreCase(seller)) {
             return 0;
         }
-        int i=1;
-        for(Auction auc : auctions){
-            if(auc.getSeller().equalsIgnoreCase(seller)){
+        int i = 1;
+        for (Auction auc : auctions) {
+            if (auc.getSeller().equalsIgnoreCase(seller)) {
                 return i;
             }
             i++;
@@ -39,6 +39,7 @@ public class AuctionManager extends BukkitRunnable {
         if (auction != null) {
             if (auctions.offer(auction)) {
                 currentDowntime = 0; // Reset
+                return true;
             }
         }
         return false;
