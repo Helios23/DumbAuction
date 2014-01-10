@@ -69,6 +69,7 @@ public class Auction {
 
     public boolean bid(String bidder, double amount) {
         if (!hasBids() || (amount > highBid && amount - highBid >= bidIncrement)) {
+            if (amount < startAmount) return false;
             // Refund last bidder
             if (highBidder != null) DumbAuction.economy.depositPlayer(highBidder, highBid);
             highBid = amount;
@@ -110,19 +111,16 @@ public class Auction {
             }
             Player player = plugin.getServer().getPlayerExact(highBidder);
             if (player != null) {
-                HashMap<Integer, ItemStack> overflow = player.getInventory().addItem(items.toArray(new ItemStack[0]));
-                if (overflow != null && overflow.size() > 0) {
-                    Location dropLocation = player.getLocation().clone();
-                    dropLocation = dropLocation.add(0, 1, 0);
-                    for (ItemStack stack : overflow.values()) {
-                        player.getWorld().dropItemNaturally(dropLocation, stack);
-                    }
-                    plugin.sendMessage(player, ChatColor.RED + "Your inventory was full, some items were dropped on the ground.");
+                if (plugin.getMobArena() != null && plugin.getMobArena().isInArena(plugin, player)) {
+                    plugin.getMobArena().queue(player, items, true);
+                    plugin.sendMessage(player, ChatColor.GREEN + "Your items will be given to you when you leave the arena.");
+                } else {
+                    rewardItems(player, items, true);
                 }
-                player.updateInventory();
-                plugin.sendMessage(player, ChatColor.GREEN + "You won the auction!");
+            } else {
+                for (ItemStack item : items) plugin.getQueue().addToQueue(highBidder, item);
             }
-            plugin.broadcast(ChatColor.GREEN + player.getName() + " has won the auction for " + ChatColor.YELLOW + name + ChatColor.GREEN + " at " + ChatColor.YELLOW + DumbAuction.economy.format(highBid));
+            plugin.broadcast(ChatColor.GREEN + highBidder + " has won the auction for " + ChatColor.YELLOW + name + ChatColor.GREEN + " at " + ChatColor.YELLOW + DumbAuction.economy.format(highBid));
 
             // Transfer money
             DumbAuction.economy.depositPlayer(seller, highBid);
@@ -132,16 +130,32 @@ public class Auction {
         if (secondsLeft <= 0) plugin.broadcast(ChatColor.GRAY + "Auction ended with no bids.");
         Player player = plugin.getServer().getPlayerExact(seller);
         if (player != null) {
-            HashMap<Integer, ItemStack> overflow = player.getInventory().addItem(items.toArray(new ItemStack[0]));
-            if (overflow != null && overflow.size() > 0) {
-                Location dropLocation = player.getLocation().clone();
-                dropLocation = dropLocation.add(0, 1, 0);
-                for (ItemStack stack : overflow.values()) {
-                    player.getWorld().dropItemNaturally(dropLocation, stack);
-                }
-                plugin.sendMessage(player, ChatColor.RED + "Your inventory was full, some items were dropped on the ground.");
+            if (plugin.getMobArena() != null && plugin.getMobArena().isInArena(plugin, player)) {
+                plugin.getMobArena().queue(player, items, false);
+                plugin.sendMessage(player, ChatColor.GREEN + "Your items will be given to you when you leave the arena.");
+            } else {
+                rewardItems(player, items, false);
             }
-            player.updateInventory();
+        } else {
+            for (ItemStack item : items) plugin.getQueue().addToQueue(seller, item);
+        }
+    }
+
+    public static void rewardItems(Player player, List<ItemStack> items, boolean isWinner) {
+        DumbAuction plugin = DumbAuction.p;
+        HashMap<Integer, ItemStack> overflow = player.getInventory().addItem(items.toArray(new ItemStack[0]));
+        if (overflow != null && overflow.size() > 0) {
+            Location dropLocation = player.getLocation().clone();
+            dropLocation = dropLocation.add(0, 1, 0);
+            for (ItemStack stack : overflow.values()) {
+                player.getWorld().dropItemNaturally(dropLocation, stack);
+            }
+            plugin.sendMessage(player, ChatColor.RED + "Your inventory was full, some items were dropped on the ground.");
+        }
+        player.updateInventory();
+        if (isWinner) {
+            plugin.sendMessage(player, ChatColor.GREEN + "Your winnings have been given to you.");
+        } else {
             plugin.sendMessage(player, ChatColor.GREEN + "Your items have been returned to you.");
         }
     }

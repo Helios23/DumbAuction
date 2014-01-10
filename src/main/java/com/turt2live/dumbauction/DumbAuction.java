@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,6 +69,8 @@ public class DumbAuction extends DumbPlugin {
             queue = new OfflineQueue(this);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
         }
     }
 
@@ -78,6 +81,8 @@ public class DumbAuction extends DumbPlugin {
         if (queue != null) try {
             queue.save();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
@@ -339,6 +344,10 @@ public class DumbAuction extends DumbPlugin {
         return auctions;
     }
 
+    public MobArenaHook getMobArena(){
+        return maHook;
+    }
+
     private void showAucHelp(CommandSender sender, int n) {
         String base = ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc start <start price> <increment>";
         if (n >= 3) base += " <time>";
@@ -399,7 +408,7 @@ public class DumbAuction extends DumbPlugin {
     }
 
     public static void displayItem(CommandSender sender, ItemStack stack, int amount) {
-        sender.sendMessage(ChatColor.BLUE + getName(stack) + ChatColor.BLUE + " x" + amount);
+        p.sendMessage(sender, ChatColor.BLUE + getName(stack) + ChatColor.BLUE + " x" + amount);
         if (stack.hasItemMeta()) {
             ItemMeta meta = stack.getItemMeta();
             if (meta.hasDisplayName()) {

@@ -2,6 +2,7 @@ package com.turt2live.dumbauction;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -20,31 +21,36 @@ public class OfflineQueue implements Listener {
     private Map<String, List<ItemStack>> queue = new HashMap<String, List<ItemStack>>();
     private File file;
 
-    public OfflineQueue(DumbAuction plugin) throws IOException {
+    public OfflineQueue(DumbAuction plugin) throws IOException, InvalidConfigurationException {
         file = new File(plugin.getDataFolder(), "offline.yml");
         if (!file.exists()) file.createNewFile();
 
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        FileConfiguration config = new YamlConfiguration();
+        config.load(file);
         if (config.getKeys(false) != null) {
             for (String playerName : config.getKeys(false)) {
-                List<?> objs = config.getList(playerName);
-                if (objs != null && objs.size() > 0 && objs.get(0) instanceof ItemStack) {
-                    queue.put(playerName, (List<ItemStack>) objs);
+                List<ItemStack> items = new ArrayList<ItemStack>();
+                for (String key : config.getConfigurationSection(playerName).getKeys(false)) {
+                    items.add(config.getItemStack(playerName + "." + key));
                 }
+                queue.put(playerName, items);
             }
         }
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public void save() throws IOException {
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        Set<String> keys = new HashSet<String>(config.getKeys(false));
-        for (String key : keys) {
-            if (!queue.containsKey(key)) {
-                config.set(key, null);
-            } else {
-                config.set(key, queue.get(key));
+    public void save() throws IOException, InvalidConfigurationException {
+        FileConfiguration config = new YamlConfiguration();
+        config.load(file);
+        Set<String> configKeys = config.getKeys(false);
+        for (String key : configKeys) {
+            config.set(key, null);
+        }
+        for (String key : queue.keySet()) {
+            List<ItemStack> items = queue.get(key);
+            for (int i = 0; i < items.size(); i++) {
+                config.set(key + "." + i, items.get(i));
             }
         }
         config.save(file);
