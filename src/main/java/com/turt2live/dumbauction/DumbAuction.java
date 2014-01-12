@@ -55,15 +55,12 @@ public class DumbAuction extends DumbPlugin {
     public void onEnable() {
         p = this;
         saveDefaultConfig();
-        getServer().getScheduler().runTask(this, new Runnable() {
-            @Override
-            public void run() {
-                if (!setupEconomy()) {
-                    getLogger().severe("COULD NOT SETUP VAULT ECONOMY! Disabling while you fix that.");
-                    getServer().getPluginManager().disablePlugin(p);
-                }
-            }
-        });
+        if (!setupEconomy()) {
+            getLogger().severe("A Vault-supported economy plugin was not found. Please add one to your server.");
+            getLogger().severe("For a simple economy plugin, I suggest DumbCoin: http://dev.bukkit.org/bukkit-plugins/dumbcoin/");
+            getServer().getPluginManager().disablePlugin(p);
+            return;
+        }
         initCommonSense(72073);
 
         auctions = new AuctionManager();
@@ -72,6 +69,7 @@ public class DumbAuction extends DumbPlugin {
         toggles.add("silence");
         toggles.add("ignore");
         toggles.add("quiet");
+        toggles.add("off");
 
         if (getServer().getPluginManager().getPlugin("WhatIsIt") != null) {
             whatHook = new WhatIsItHook();
