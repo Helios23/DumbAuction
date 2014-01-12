@@ -20,6 +20,22 @@ import java.util.Map;
 
 public class DumbAuction extends DumbPlugin {
 
+    /*
+    TODO: Missing Features
+    > Logging to file
+    > Creative mode blocking
+    > Damaged items deny
+    > Global stfu
+    > Banned items
+    > Deposit tax to specified user account
+    > Prevent gm change
+    > Sealed bidding (silent auction)
+    > Auction house
+    > Ability to disable specified lore/display name messages
+    > Impound (admin cancel)
+    > Buy now
+     */
+
     public static DumbAuction p;
     public static Economy economy;
 
@@ -443,5 +459,14 @@ public class DumbAuction extends DumbPlugin {
                 p.sendMessage(sender, ChatColor.AQUA + enchantName);
             }
         }
+    }
+
+    /**
+     * Gets the active instance of DumbAuction
+     *
+     * @return the plugin instance
+     */
+    public static DumbAuction getInstance() {
+        return p;
     }
 }
