@@ -1,5 +1,6 @@
-package com.turt2live.dumbauction.event.base;
+package com.turt2live.dumbauction.event;
 
+import com.turt2live.commonsense.event.DumbCancellableEvent;
 import com.turt2live.dumbauction.auction.Auction;
 
 /**

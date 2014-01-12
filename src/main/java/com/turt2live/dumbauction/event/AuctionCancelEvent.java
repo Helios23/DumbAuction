@@ -1,7 +1,6 @@
 package com.turt2live.dumbauction.event;
 
 import com.turt2live.dumbauction.auction.Auction;
-import com.turt2live.dumbauction.event.base.AuctionEvent;
 import org.bukkit.command.CommandSender;
 
 /**
