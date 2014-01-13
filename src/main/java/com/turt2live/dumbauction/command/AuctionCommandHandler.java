@@ -6,6 +6,7 @@ import com.turt2live.dumbauction.command.validator.ArgumentValidator;
 import com.turt2live.dumbauction.command.validator.DoubleValidator;
 import com.turt2live.dumbauction.command.validator.IntValidator;
 import com.turt2live.dumbauction.command.validator.InventoryAmountValidator;
+import com.turt2live.dumbauction.util.ItemUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandExecutor;
@@ -165,6 +166,23 @@ public class AuctionCommandHandler implements CommandExecutor {
             }
         }
         return false;
+    }
+
+    @Command(
+            root = "auction",
+            subArgument = "info",
+            usage = "/auc info"
+    )
+    public boolean auctionInfoCommand(CommandSender sender, Map<String, Object> arguments) {
+        Auction auction = plugin.getAuctionManager().getActiveAuction();
+        if (auction == null) {
+            plugin.sendMessage(sender, ChatColor.RED + "No active auction!");
+        } else {
+            ItemStack stack = auction.getTemplateItem().clone();
+            stack.setAmount(auction.getItemAmount());
+            ItemUtil.showInformation(stack, sender);
+        }
+        return true;
     }
 
     @Command(
