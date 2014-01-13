@@ -51,6 +51,49 @@ public class AuctionManager {
     }
 
     /**
+     * Gets the auction a seller has in the queue. Will return null if {@link #hasAuction(String)} returns false
+     *
+     * @param seller the seller to lookup
+     * @return the auction, or null if none found
+     */
+    public Auction getAuctionBySeller(String seller) {
+        for (Auction auction : auctions) {
+            if (auction.getSeller().equalsIgnoreCase(seller)) {
+                return auction;
+            }
+        }
+        if (activeAuction != null && activeAuction.getSeller().equalsIgnoreCase(seller))
+            return activeAuction;
+        return null;
+    }
+
+    /**
+     * Determines if a specified seller already has an auction in the queue
+     *
+     * @param seller the seller to lookup
+     * @return true if the seller already has an acution in the queue
+     */
+    public boolean hasAuction(String seller) {
+        for (Auction auction : auctions) {
+            if (auction.getSeller().equalsIgnoreCase(seller)) {
+                return true;
+            }
+        }
+        if (activeAuction != null && activeAuction.getSeller().equalsIgnoreCase(seller))
+            return true;
+        return false;
+    }
+
+    /**
+     * Determines if the auction manager is full or not
+     *
+     * @return true if full, false otherwise
+     */
+    public boolean isFull() {
+        return auctions.size() >= maxQueueSize;
+    }
+
+    /**
      * Sets whether or not the auction manager is paused
      *
      * @param paused paused status

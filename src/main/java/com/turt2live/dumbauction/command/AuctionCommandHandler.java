@@ -1,6 +1,7 @@
 package com.turt2live.dumbauction.command;
 
 import com.turt2live.dumbauction.DumbAuction;
+import com.turt2live.dumbauction.auction.Auction;
 import com.turt2live.dumbauction.command.validator.ArgumentValidator;
 import com.turt2live.dumbauction.command.validator.DoubleValidator;
 import com.turt2live.dumbauction.command.validator.IntValidator;
@@ -203,13 +204,83 @@ public class AuctionCommandHandler implements CommandExecutor {
             return true;
         }
 
+        // First of all, is the queue accepting auctions?
+        if (plugin.getAuctionManager().isPaused()) {
+            plugin.sendMessage(sender, ChatColor.RED + "Cannot add auction: Queue paused.");
+            return true;
+        }
+        if (plugin.getAuctionManager().isFull()) {
+            plugin.sendMessage(sender, ChatColor.RED + "Cannot add auction: Queue full");
+            return true;
+        }
+        if (plugin.getAuctionManager().hasAuction(sender.getName())) {
+            plugin.sendMessage(sender, ChatColor.RED + "You already have an auction in the queue!");
+            return true;
+        }
+
         // Pre-validated variables
         double startPrice = arguments.containsKey("startPrice") ? (Double) arguments.get("startPrice") : plugin.getConfig().getDouble("default-start-price", 100);
         double increment = arguments.containsKey("bidIncrement") ? (Double) arguments.get("bidIncrement") : plugin.getConfig().getDouble("default-bid-increment", 100);
         long time = arguments.containsKey("time") ? (Integer) arguments.get("time") : plugin.getConfig().getLong("default-time-seconds", 30);
         int amount = arguments.containsKey("amount") ? (Integer) arguments.get("amount") : hand.getAmount();
 
-        // TODO: Rest of command
+        // Check one : Time limit
+        if (time >= plugin.getConfig().getLong("min-auction-time", 10)) {
+            if (!player.hasPermission("dumbauction.admin") && time > plugin.getConfig().getLong("max-auction-time", 60)) {
+                plugin.sendMessage(sender, ChatColor.RED + "Time too large!");
+                return true;
+            }
+        } else {
+            plugin.sendMessage(sender, ChatColor.RED + "Time too small!");
+            return true;
+        }
+
+        // Check two : Start price
+        if (startPrice >= plugin.getConfig().getLong("min-start-cost", 10)) {
+            if (!player.hasPermission("dumbauction.admin") && startPrice > plugin.getConfig().getLong("max-start-cost", 20000)) {
+                plugin.sendMessage(sender, ChatColor.RED + "Cost too large!");
+                return true;
+            }
+        } else {
+            plugin.sendMessage(sender, ChatColor.RED + "Cost too small!");
+            return true;
+        }
+
+        // Check three : Bid price
+        if (increment >= plugin.getConfig().getLong("min-bid-cost", 10)) {
+            if (!player.hasPermission("dumbauction.admin") && increment > plugin.getConfig().getLong("max-bid-cost", 20000)) {
+                plugin.sendMessage(sender, ChatColor.RED + "Bid increment too large!");
+                return true;
+            }
+        } else {
+            plugin.sendMessage(sender, ChatColor.RED + "Bid increment too small!");
+            return true;
+        }
+
+        // Generate a list of items we are taking
+        List<ItemStack> taking = new ArrayList<ItemStack>();
+        int taken = 0;
+        for (ItemStack itemStack : player.getInventory().getContents()) {
+            int newTaken = taken + itemStack.getAmount();
+            if (itemStack == null || !itemStack.isSimilar(hand)) continue;
+            ItemStack stack = itemStack.clone();
+            if (newTaken > amount) {
+                stack.setAmount(amount - taken);
+                newTaken = amount;
+            }
+            taking.add(stack);
+            taken = newTaken;
+            if (taken > amount) break;
+        }
+
+        // Attempt to add the auction
+        Auction auction = new Auction(sender.getName(), startPrice, increment, time, amount, hand);
+        if (plugin.getAuctionManager().submitAuction(auction)) {
+            plugin.sendMessage(sender, ChatColor.GREEN + "Your auction has been queued as " + ChatColor.DARK_GREEN + "#" + plugin.getAuctionManager().getPosition(auction));
+        } else {
+            plugin.sendMessage(sender, ChatColor.RED + "Could not add the auction!");
+        }
+
         return true;
     }
 }
