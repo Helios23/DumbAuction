@@ -44,4 +44,11 @@ import java.lang.annotation.Target;
      * @return the argument validator
      */
     Class<? extends ArgumentValidator> validator() default NoValidationValidator.class;
+
+    /**
+     * Arguments for the validator
+     *
+     * @return the arguments
+     */
+    String[] validatorArguments() default {};
 }

@@ -1,5 +1,7 @@
 package com.turt2live.dumbauction.command.validator;
 
+import org.bukkit.command.CommandSender;
+
 /**
  * A validator that does no validation
  *
@@ -8,17 +10,21 @@ package com.turt2live.dumbauction.command.validator;
 public class NoValidationValidator implements ArgumentValidator {
 
     @Override
-    public boolean isValid(String input) {
+    public boolean isValid(CommandSender sender, String input) {
         return true;
     }
 
     @Override
-    public Object get(String input) {
+    public Object get(CommandSender sender, String input) {
         return input;
     }
 
     @Override
-    public String getErrorMessage(String input) {
+    public String getErrorMessage(CommandSender sender, String input) {
         return "";
+    }
+
+    @Override
+    public void setArguments(String[] arguments) {
     }
 }

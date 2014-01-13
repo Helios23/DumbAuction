@@ -2,6 +2,9 @@ package com.turt2live.dumbauction.command;
 
 import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.command.validator.ArgumentValidator;
+import com.turt2live.dumbauction.command.validator.DoubleValidator;
+import com.turt2live.dumbauction.command.validator.IntValidator;
+import com.turt2live.dumbauction.command.validator.InventoryAmountValidator;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -96,22 +99,24 @@ public class AuctionCommandHandler implements CommandExecutor {
                     return true;
                 }
                 Map<String, Object> arguments = new HashMap<String, Object>();
-                boolean hasArguments = false;
+                int numNonOptional = 0;
                 for (Annotation annotation1 : method.getAnnotations()) {
                     if (annotation1 instanceof ArgumentList) {
                         ArgumentList list = (ArgumentList) annotation1;
-                        hasArguments = true;
                         for (Argument arg : list.args()) {
+                            if (!arg.optional())
+                                numNonOptional++;
                             if (arg.validator() != null) {
                                 int realIndex = arg.index() + 1;
                                 if (realIndex < args.length) {
                                     try {
                                         ArgumentValidator validator = arg.validator().newInstance();
+                                        validator.setArguments(arg.validatorArguments());
                                         String input = args[realIndex];
-                                        if (validator.isValid(input)) {
-                                            arguments.put(arg.subArgument(), validator.get(input));
+                                        if (validator.isValid(sender, input)) {
+                                            arguments.put(arg.subArgument(), validator.get(sender, input));
                                         } else {
-                                            plugin.sendMessage(sender, validator.getErrorMessage(input));
+                                            plugin.sendMessage(sender, validator.getErrorMessage(sender, input));
                                             return true;
                                         }
                                     } catch (InstantiationException e) {
@@ -135,7 +140,7 @@ public class AuctionCommandHandler implements CommandExecutor {
                         }
                     }
                 }
-                if (hasArguments && arguments.isEmpty()) {
+                if (numNonOptional < arguments.size()) {
                     plugin.sendMessage(sender, ChatColor.RED + "Incorrect syntax. Try " + ChatColor.YELLOW + annotation.usage());
                     return true;
                 }
@@ -175,4 +180,23 @@ public class AuctionCommandHandler implements CommandExecutor {
         }
         return true;
     }*/
+
+    @Command(
+            root = "auction",
+            subArgument = "start",
+            usage = "/auc start [amount] [startPrice] [increment] [time]",
+            playersOnly = true
+    )
+    @ArgumentList(args = {
+            @Argument(index = 0, subArgument = "amount", optional = true, validator = InventoryAmountValidator.class),
+            @Argument(index = 1, subArgument = "startPrice", optional = true, validator = DoubleValidator.class, validatorArguments = {"Please supply a start price"}),
+            @Argument(index = 2, subArgument = "bidIncrement", optional = true, validator = DoubleValidator.class, validatorArguments = {"Please supply a bid increment"}),
+            @Argument(index = 3, subArgument = "time", optional = true, validator = IntValidator.class, validatorArguments = {"Please supply a valid time"})
+    })
+    public boolean auctionStartCommand(CommandSender sender, Map<String, Object> arguments) {
+        for (String key : arguments.keySet()) {
+            sender.sendMessage(ChatColor.AQUA + key + " " + ChatColor.GRAY + ": " + arguments.get(key));
+        }
+        return true;
+    }
 }

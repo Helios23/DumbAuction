@@ -11,6 +11,7 @@
         <vault.version>1.2.27</vault.version>
 
         <BUILD_NUMBER>LOCAL</BUILD_NUMBER>
+        <shade.name>dumbauction</shade.name>
     </properties>
 
     <!-- DEPENDENCIES -->
@@ -172,7 +173,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
                             <artifactSet>
                                 <includes>
                                     <include>com.turt2live:CommonSense</include>
@@ -181,11 +181,16 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.turt2live.commonsense</pattern>
-                                    <shadedPattern>com.turt2live.${project.name}.commonsense</shadedPattern>
+                                    <shadedPattern>com.turt2live.${shade.name}.commonsense</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.turt2live.CommonSense</pattern>
-                                    <shadedPattern>com.turt2live.${project.name}.commonsense</shadedPattern>
+                                    <shadedPattern>com.turt2live.${shade.name}.commonsense</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>net.gravitydevelopment.updater.commonsense</pattern>
+                                    <shadedPattern>net.gravitydevelopment.updater.${shade.name}.commonsense
+                                    </shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
