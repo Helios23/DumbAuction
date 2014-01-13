@@ -1,6 +1,8 @@
 package com.turt2live.dumbauction.command;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -9,6 +11,7 @@ import java.lang.annotation.Target;
  * @author turt2live
  */
 @Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface AuctionCommand {
 
     /**

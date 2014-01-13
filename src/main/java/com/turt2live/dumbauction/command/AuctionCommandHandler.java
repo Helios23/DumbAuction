@@ -44,19 +44,17 @@ public class AuctionCommandHandler implements CommandExecutor {
                 Map.class
         };
         for (Method method : getClass().getMethods()) {
-            System.out.println(method.getName()); // TODO: Debug
-            Annotation[] annotations = method.getAnnotations();
+            Annotation[] annotations = method.getDeclaredAnnotations();
             for (Annotation annotation : annotations) {
-                System.out.println(annotation.toString()); // TODO: Debug
                 if (annotation instanceof AuctionCommand) {
-                    if (method.getParameterTypes() == null || method.getReturnType() != Boolean.class || method.getParameterTypes().length != expectedArguments.length) {
-                        plugin.getLogger().severe("Weird command registration on method " + getClass().getName() + "#" + method.getName());
+                    if (method.getParameterTypes() == null || (method.getReturnType() != boolean.class && method.getReturnType() != Boolean.class) || method.getParameterTypes().length != expectedArguments.length) {
+                        plugin.getLogger().severe("[1] Weird command registration on method " + getClass().getName() + "#" + method.getName());
                         break;
                     } else {
                         boolean valid = true;
                         for (int i = 0; i < expectedArguments.length; i++) {
                             if (expectedArguments[i] != method.getParameterTypes()[i]) {
-                                plugin.getLogger().severe("Weird command registration on method " + getClass().getName() + "#" + method.getName());
+                                plugin.getLogger().severe("[2] Weird command registration on method " + getClass().getName() + "#" + method.getName());
                                 valid = false;
                                 break;
                             }
@@ -74,18 +72,16 @@ public class AuctionCommandHandler implements CommandExecutor {
         }
     }
 
-    // TODO: This doesn't work :(
-    // https://github.com/Bukkit/Bukkit/blob/master/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java#L252
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         List<CommandInfo> commandHandlers = commands.get(command.getName());
         if (commandHandlers == null || commandHandlers.isEmpty()) {
             plugin.getLogger().severe("No command handler for command: " + command.getName());
-            sender.sendMessage(ChatColor.RED + "Severe internal error. Please contact your administrator.");
+            plugin.sendMessage(sender, ChatColor.RED + "Severe internal error. Please contact your administrator.");
             return true;
         }
         if (args.length < 1) {
-            sender.sendMessage(ChatColor.RED + "Did you mean " + ChatColor.YELLOW + "/" + command.getName() + " help" + ChatColor.RED + "?");
+            plugin.sendMessage(sender, ChatColor.RED + "Did you mean " + ChatColor.YELLOW + "/" + command.getName() + " help" + ChatColor.RED + "?");
             return true;
         }
         for (CommandInfo handler : commandHandlers) {
@@ -93,58 +89,70 @@ public class AuctionCommandHandler implements CommandExecutor {
             Method method = handler.method;
             if (annotation.subArgument().equalsIgnoreCase(args[0])) {
                 if (annotation.playersOnly() && !(sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.RED + "You need to be a player to run that command.");
+                    plugin.sendMessage(sender, ChatColor.RED + "You need to be a player to run that command.");
+                    return true;
+                }
+                if (!annotation.permission().equalsIgnoreCase(AuctionCommand.NO_PERMISSION) && !sender.hasPermission(annotation.permission())) {
+                    plugin.sendMessage(sender, ChatColor.RED + "No permission");
                     return true;
                 }
                 Map<String, Object> arguments = new HashMap<String, Object>();
+                boolean hasArguments = false;
                 for (Annotation annotation1 : method.getAnnotations()) {
-                    if (annotation1 instanceof AuctionArgument) {
-                        AuctionArgument arg = (AuctionArgument) annotation1;
-                        if (arg.validator() != null) {
-                            int realIndex = arg.index() + 1;
-                            if (realIndex < args.length) {
-                                try {
-                                    ArgumentValidator validator = arg.validator().newInstance();
-                                    String input = args[realIndex];
-                                    if (validator.isValid(input)) {
-                                        arguments.put(arg.subArgument(), validator.get(input));
-                                    } else {
-                                        sender.sendMessage(validator.getErrorMessage(input));
+                    if (annotation1 instanceof ArgumentList) {
+                        ArgumentList list = (ArgumentList) annotation1;
+                        hasArguments = true;
+                        for (AuctionArgument arg : list.args()) {
+                            if (arg.validator() != null) {
+                                int realIndex = arg.index() + 1;
+                                if (realIndex < args.length) {
+                                    try {
+                                        ArgumentValidator validator = arg.validator().newInstance();
+                                        String input = args[realIndex];
+                                        if (validator.isValid(input)) {
+                                            arguments.put(arg.subArgument(), validator.get(input));
+                                        } else {
+                                            plugin.sendMessage(sender, validator.getErrorMessage(input));
+                                            return true;
+                                        }
+                                    } catch (InstantiationException e) {
+                                        e.printStackTrace();
+                                        plugin.sendMessage(sender, ChatColor.RED + "Severe internal error. Please contact your administrator.");
+                                        return true;
+                                    } catch (IllegalAccessException e) {
+                                        e.printStackTrace();
+                                        plugin.sendMessage(sender, ChatColor.RED + "Severe internal error. Please contact your administrator.");
                                         return true;
                                     }
-                                } catch (InstantiationException e) {
-                                    e.printStackTrace();
-                                    sender.sendMessage(ChatColor.RED + "Severe internal error. Please contact your administrator.");
-                                    return true;
-                                } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
-                                    sender.sendMessage(ChatColor.RED + "Severe internal error. Please contact your administrator.");
+                                } else if (!arg.optional()) {
+                                    plugin.sendMessage(sender, ChatColor.RED + "Incorrect syntax. Try " + ChatColor.YELLOW + annotation.usage());
                                     return true;
                                 }
-                            } else if (!arg.optional()) {
-                                sender.sendMessage(annotation.usage());
+                            } else {
+                                plugin.getLogger().severe("Invalid argument handler for: /" + command.getName() + " " + args[0]);
+                                plugin.sendMessage(sender, ChatColor.RED + "Severe internal error. Please contact your administrator.");
                                 return true;
                             }
-                        } else {
-                            plugin.getLogger().severe("Invalid argument handler for: /" + command.getName() + " " + args[0]);
-                            sender.sendMessage(ChatColor.RED + "Severe internal error. Please contact your administrator.");
-                            return true;
                         }
                     }
                 }
+                if (hasArguments && arguments.isEmpty()) {
+                    plugin.sendMessage(sender, ChatColor.RED + "Incorrect syntax. Try " + ChatColor.YELLOW + annotation.usage());
+                    return true;
+                }
                 try {
-                    return (Boolean) method.invoke(sender, arguments);
+                    return (Boolean) method.invoke(this, sender, arguments);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
-                    sender.sendMessage(ChatColor.RED + "Severe internal error. Please contact your administrator.");
+                    plugin.sendMessage(sender, ChatColor.RED + "Severe internal error. Please contact your administrator.");
                     return true;
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
-                    sender.sendMessage(ChatColor.RED + "Severe internal error. Please contact your administrator.");
+                    plugin.sendMessage(sender, ChatColor.RED + "Severe internal error. Please contact your administrator.");
                     return true;
                 } catch (ClassCastException e) {
                     e.printStackTrace();
-                    sender.sendMessage(ChatColor.RED + "Severe internal error. Please contact your administrator.");
+                    plugin.sendMessage(sender, ChatColor.RED + "Severe internal error. Please contact your administrator.");
                     return true;
                 }
             }
@@ -152,14 +160,20 @@ public class AuctionCommandHandler implements CommandExecutor {
         return false;
     }
 
-    @AuctionCommand(
+    /*@AuctionCommand(
             root = "auction",
             subArgument = "test",
             usage = "/auc test"
     )
-    @AuctionArgument(index = 0, subArgument = "test2", optional = true)
+    @ArgumentList(args = {
+            @AuctionArgument(index = 0, subArgument = "test2", optional = false),
+            @AuctionArgument(index = 1, subArgument = "test3", optional = true)
+    })
     public boolean testCommand(CommandSender sender, Map<String, Object> args) {
-        sender.sendMessage(ChatColor.AQUA + "Test command. Supplied optional? " + (args.containsKey("test2") ? ChatColor.GREEN + "Yes: " + args.get("test2") : ChatColor.RED + "No"));
+        plugin.sendMessage(sender, ChatColor.AQUA + "Test command.");
+        for (String key : args.keySet()) {
+            plugin.sendMessage(sender, key + " : " + args.get(key));
+        }
         return true;
-    }
+    }*/
 }

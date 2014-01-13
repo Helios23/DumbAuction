@@ -1,0 +1,23 @@
+package com.turt2live.dumbauction.command;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Represents an argument list
+ *
+ * @author turt2live
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface ArgumentList {
+
+    /**
+     * Arguments
+     *
+     * @return arguments
+     */
+    AuctionArgument[] args();
+}

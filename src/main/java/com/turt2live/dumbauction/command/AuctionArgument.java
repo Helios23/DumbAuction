@@ -4,6 +4,8 @@ import com.turt2live.dumbauction.command.validator.ArgumentValidator;
 import com.turt2live.dumbauction.command.validator.NoValidationValidator;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -12,6 +14,7 @@ import java.lang.annotation.Target;
  * @author turt2live
  */
 @Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface AuctionArgument {
 
     /**
