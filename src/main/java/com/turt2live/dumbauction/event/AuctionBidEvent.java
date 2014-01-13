@@ -2,15 +2,16 @@ package com.turt2live.dumbauction.event;
 
 import com.turt2live.dumbauction.auction.Auction;
 import com.turt2live.dumbauction.auction.Bid;
+import com.turt2live.dumbauction.event.base.AuctionCancellableEvent;
 
 /**
  * Fired when a valid bid is submitted to an auction
  *
  * @author turt2live
  */
-public class AuctionBidEvent extends AuctionEvent {
+public class AuctionBidEvent extends AuctionCancellableEvent {
 
-    private Bid bid;
+    protected Bid bid;
 
     /**
      * Creates a new AuctionBidEvent

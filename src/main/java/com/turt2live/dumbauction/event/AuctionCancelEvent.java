@@ -1,6 +1,7 @@
 package com.turt2live.dumbauction.event;
 
 import com.turt2live.dumbauction.auction.Auction;
+import com.turt2live.dumbauction.event.base.AuctionCancellableEvent;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -8,7 +9,7 @@ import org.bukkit.command.CommandSender;
  *
  * @author turt2live
  */
-public class AuctionCancelEvent extends AuctionEvent {
+public class AuctionCancelEvent extends AuctionCancellableEvent {
 
     /**
      * Possible causes for an auction to be cancelled
@@ -32,8 +33,8 @@ public class AuctionCancelEvent extends AuctionEvent {
         MAGIC;
     }
 
-    private CancelCause cause;
-    private CommandSender canceller;
+    protected CancelCause cause;
+    protected CommandSender canceller;
 
     /**
      * Creates a new AuctionCancelEvent

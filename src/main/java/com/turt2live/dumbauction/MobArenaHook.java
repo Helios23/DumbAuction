@@ -45,11 +45,13 @@ public class MobArenaHook implements Listener {
             public void run() {
                 List<ItemStack> items = winnings.get(event.getPlayer().getName());
                 if (items != null) {
-                    Auction.rewardItems(event.getPlayer(), items, true);
+                    // TODO
+                    //Auction.rewardItems(event.getPlayer(), items, true);
                 }
                 items = failed.get(event.getPlayer().getName());
                 if (items != null) {
-                    Auction.rewardItems(event.getPlayer(), items, false);
+                    // TODO
+                    // Auction.rewardItems(event.getPlayer(), items, false);
                 }
                 winnings.remove(event.getPlayer().getName());
                 failed.remove(event.getPlayer().getName());

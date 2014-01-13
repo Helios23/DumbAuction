@@ -11,13 +11,37 @@ import com.turt2live.dumbauction.auction.Bid;
  */
 public class AuctionSnipeEvent extends AuctionBidEvent {
 
+    protected long extension;
+
     /**
      * Creates a new AuctionSnipeEvent
      *
-     * @param auction the applicable auction
-     * @param bid     the applicable bid
+     * @param auction   the applicable auction
+     * @param bid       the applicable bid
+     * @param extension the number of seconds this auction will be extended by
      */
-    public AuctionSnipeEvent(Auction auction, Bid bid) {
+    public AuctionSnipeEvent(Auction auction, Bid bid, long extension) {
         super(auction, bid);
+        if (extension < 0) throw new IllegalArgumentException();
+        this.extension = extension;
+    }
+
+    /**
+     * Gets the amount of time this auction will be extended by
+     *
+     * @return the number of seconds this auction will be extended by
+     */
+    public long getExtension() {
+        return extension;
+    }
+
+    /**
+     * Sets the number of seconds to extend this auction by. Zero simply does nothing.
+     *
+     * @param extension the number of seconds to extend the auction by, cannot be less than zero
+     */
+    public void setExtension(long extension) {
+        if (extension < 0) throw new IllegalArgumentException();
+        this.extension = extension;
     }
 }

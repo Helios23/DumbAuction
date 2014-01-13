@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class RewardOverflowEvent extends DumbNotCancellableEvent {
 
-    private List<ItemStack> rewards = new ArrayList<ItemStack>();
-    private String rewardee;
+    protected List<ItemStack> rewards = new ArrayList<ItemStack>();
+    protected String rewardee;
 
     /**
      * Creates a new RewardOverflowEvent

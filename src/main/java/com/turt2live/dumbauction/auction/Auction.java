@@ -2,6 +2,7 @@ package com.turt2live.dumbauction.auction;
 
 import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.event.AuctionBidEvent;
+import com.turt2live.dumbauction.event.AuctionSnipeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -163,6 +164,31 @@ public class Auction {
                 DumbAuction.getInstance().getServer().getPluginManager().callEvent(event);
                 if (!event.isCancelled()) {
                     bids.add(bid);
+
+                    // Snipe detection
+                    DumbAuction plugin = DumbAuction.getInstance();
+                    int minTime = plugin.getConfig().getInt("snipe.time-left", 5);
+                    long extension = plugin.getConfig().getLong("snipe.extend-seconds", 5);
+                    if (minTime < 0) {
+                        plugin.getLogger().warning("snipe.time-left of " + minTime + " is invalid. Must be greater than zero or zero to disable. Using 5 instead");
+                        minTime = 5;
+                    }
+                    if (extension < 0) {
+                        plugin.getLogger().warning("snipe.extend-seconds of " + extension + " is invalid. Must be greater than zero or zero to disable. Using 5 instead");
+                        extension = 5;
+                    }
+                    if (minTime > 0 && extension > 0 && plugin.getAuctionManager().getAuctionTimeLeft() <= minTime) {
+                        AuctionSnipeEvent snipeEvent = new AuctionSnipeEvent(this, bid, extension);
+                        plugin.getServer().getPluginManager().callEvent(snipeEvent);
+                        if (!snipeEvent.isCancelled()) {
+                            extension = snipeEvent.getExtension();
+                            if (extension > 0) {
+                                plugin.getAuctionManager().setAuctionTimeLeft(plugin.getAuctionManager().getAuctionTimeLeft() + extension);
+                            }
+                        }
+                    }
+
+
                     return true;
                 }
             }
@@ -170,8 +196,8 @@ public class Auction {
         return false;
     }
 
-    void cancel(){
-
+    void cancel() {
+        // todo
     }
 
 }

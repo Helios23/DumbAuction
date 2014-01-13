@@ -10,8 +10,8 @@ import com.turt2live.dumbauction.auction.AuctionManager;
  */
 public class AuctionQueuePauseStateEvent extends DumbCancellableEvent {
 
-    private boolean isPausing;
-    private AuctionManager manager;
+    protected boolean isPausing;
+    protected AuctionManager manager;
 
     /**
      * Creates a new AuctionQueuePauseStateEvent

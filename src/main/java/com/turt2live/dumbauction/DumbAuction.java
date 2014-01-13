@@ -1,10 +1,12 @@
 package com.turt2live.dumbauction;
 
 import com.turt2live.commonsense.DumbPlugin;
+import com.turt2live.dumbauction.auction.AuctionManager;
+import com.turt2live.dumbauction.command.AuctionCommandHandler;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
@@ -63,6 +65,19 @@ public class DumbAuction extends DumbPlugin {
         }
         initCommonSense(72073);
 
+        getCommand("auction").setExecutor(new AuctionCommandHandler(this));
+        getCommand("bid").setExecutor(new CommandExecutor() {
+            @Override
+            public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+                String[] strings1 = new String[strings.length + 1];
+                strings[0] = "bid";
+                for (int i = 0; i < strings.length; i++) {
+                    strings1[i + 1] = strings[i];
+                }
+                return getCommand("auction").getExecutor().onCommand(commandSender, getCommand("auction"), s, strings1);
+            }
+        });
+
         auctions = new AuctionManager();
         toggles.add("toggle");
         toggles.add("stfu");
@@ -106,7 +121,7 @@ public class DumbAuction extends DumbPlugin {
         }
     }
 
-    @Override
+   /* @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("auction")) {
             if (!sender.hasPermission("dumbauction.auction")) {
@@ -350,7 +365,7 @@ public class DumbAuction extends DumbPlugin {
             sendMessage(sender, ChatColor.RED + "Something broke.");
         }
         return true;
-    }
+    }*/
 
     public OfflineQueue getQueue() {
         return queue;

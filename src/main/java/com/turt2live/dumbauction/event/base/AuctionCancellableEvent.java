@@ -1,4 +1,4 @@
-package com.turt2live.dumbauction.event;
+package com.turt2live.dumbauction.event.base;
 
 import com.turt2live.commonsense.event.DumbCancellableEvent;
 import com.turt2live.dumbauction.auction.Auction;
@@ -8,20 +8,16 @@ import com.turt2live.dumbauction.auction.Auction;
  *
  * @author turt2live
  */
-public abstract class AuctionEvent extends DumbCancellableEvent {
+public abstract class AuctionCancellableEvent extends DumbCancellableEvent implements AuctionEvent {
 
-    private Auction auction;
+    protected Auction auction;
 
-    protected AuctionEvent(Auction auction) {
+    protected AuctionCancellableEvent(Auction auction) {
         if (auction == null) throw new IllegalArgumentException();
         this.auction = auction;
     }
 
-    /**
-     * Gets the auction applicable to this event
-     *
-     * @return the applicable auction
-     */
+    @Override
     public Auction getAuction() {
         return auction;
     }

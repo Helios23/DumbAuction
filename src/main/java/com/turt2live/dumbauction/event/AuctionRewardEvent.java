@@ -1,6 +1,7 @@
 package com.turt2live.dumbauction.event;
 
 import com.turt2live.dumbauction.auction.Auction;
+import com.turt2live.dumbauction.event.base.AuctionCancellableEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -11,10 +12,10 @@ import java.util.List;
  *
  * @author turt2live
  */
-public class AuctionRewardEvent extends AuctionEvent {
+public class AuctionRewardEvent extends AuctionCancellableEvent {
 
-    private List<ItemStack> rewards = new ArrayList<ItemStack>();
-    private String rewardee;
+    protected List<ItemStack> rewards = new ArrayList<ItemStack>();
+    protected String rewardee;
 
     /**
      * Creates a new AuctionRewardEvent
