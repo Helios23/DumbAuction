@@ -167,23 +167,6 @@ public class AuctionCommandHandler implements CommandExecutor {
         return false;
     }
 
-    /*@Command(
-            root = "auction",
-            subArgument = "test",
-            usage = "/auc test"
-    )
-    @ArgumentList(args = {
-            @Argument(index = 0, subArgument = "test2", optional = false),
-            @Argument(index = 1, subArgument = "test3", optional = true)
-    })
-    public boolean testCommand(CommandSender sender, Map<String, Object> args) {
-        plugin.sendMessage(sender, ChatColor.AQUA + "Test command.");
-        for (String key : args.keySet()) {
-            plugin.sendMessage(sender, key + " : " + args.get(key));
-        }
-        return true;
-    }*/
-
     @Command(
             root = "auction",
             subArgument = "start",
