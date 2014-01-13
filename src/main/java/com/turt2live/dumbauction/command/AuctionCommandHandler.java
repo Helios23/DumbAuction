@@ -44,10 +44,10 @@ public class AuctionCommandHandler implements CommandExecutor {
                 Map.class
         };
         for (Method method : getClass().getMethods()) {
-            System.out.println(method.getName());
+            System.out.println(method.getName()); // TODO: Debug
             Annotation[] annotations = method.getAnnotations();
             for (Annotation annotation : annotations) {
-                System.out.println(annotation.toString());
+                System.out.println(annotation.toString()); // TODO: Debug
                 if (annotation instanceof AuctionCommand) {
                     if (method.getParameterTypes() == null || method.getReturnType() != Boolean.class || method.getParameterTypes().length != expectedArguments.length) {
                         plugin.getLogger().severe("Weird command registration on method " + getClass().getName() + "#" + method.getName());
