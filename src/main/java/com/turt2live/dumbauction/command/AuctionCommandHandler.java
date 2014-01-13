@@ -6,9 +6,11 @@ import com.turt2live.dumbauction.command.validator.DoubleValidator;
 import com.turt2live.dumbauction.command.validator.IntValidator;
 import com.turt2live.dumbauction.command.validator.InventoryAmountValidator;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -194,9 +196,20 @@ public class AuctionCommandHandler implements CommandExecutor {
             @Argument(index = 3, subArgument = "time", optional = true, validator = IntValidator.class, validatorArguments = {"Please supply a valid time"})
     })
     public boolean auctionStartCommand(CommandSender sender, Map<String, Object> arguments) {
-        for (String key : arguments.keySet()) {
-            sender.sendMessage(ChatColor.AQUA + key + " " + ChatColor.GRAY + ": " + arguments.get(key));
+        Player player = (Player) sender; // Validated by @Command
+        ItemStack hand = player.getItemInHand();
+        if (hand == null || hand.getType() == Material.AIR) {
+            plugin.sendMessage(sender, ChatColor.RED + "You are not holding anything!");
+            return true;
         }
+
+        // Pre-validated variables
+        double startPrice = arguments.containsKey("startPrice") ? (Double) arguments.get("startPrice") : plugin.getConfig().getDouble("default-start-price", 100);
+        double increment = arguments.containsKey("bidIncrement") ? (Double) arguments.get("bidIncrement") : plugin.getConfig().getDouble("default-bid-increment", 100);
+        long time = arguments.containsKey("time") ? (Integer) arguments.get("time") : plugin.getConfig().getLong("default-time-seconds", 30);
+        int amount = arguments.containsKey("amount") ? (Integer) arguments.get("amount") : hand.getAmount();
+
+        // TODO: Rest of command
         return true;
     }
 }
