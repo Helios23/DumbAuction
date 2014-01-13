@@ -19,5 +19,5 @@ import java.lang.annotation.Target;
      *
      * @return arguments
      */
-    AuctionArgument[] args();
+    Argument[] args();
 }

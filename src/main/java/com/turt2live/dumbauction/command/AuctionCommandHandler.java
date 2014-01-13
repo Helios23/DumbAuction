@@ -3,7 +3,6 @@ package com.turt2live.dumbauction.command;
 import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.command.validator.ArgumentValidator;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,10 +23,10 @@ import java.util.Map;
 public class AuctionCommandHandler implements CommandExecutor {
 
     private class CommandInfo {
-        AuctionCommand annotation;
+        Command annotation;
         Method method;
 
-        public CommandInfo(AuctionCommand annotation, Method method) {
+        public CommandInfo(Command annotation, Method method) {
             this.annotation = annotation;
             this.method = method;
         }
@@ -46,7 +45,7 @@ public class AuctionCommandHandler implements CommandExecutor {
         for (Method method : getClass().getMethods()) {
             Annotation[] annotations = method.getDeclaredAnnotations();
             for (Annotation annotation : annotations) {
-                if (annotation instanceof AuctionCommand) {
+                if (annotation instanceof Command) {
                     if (method.getParameterTypes() == null || (method.getReturnType() != boolean.class && method.getReturnType() != Boolean.class) || method.getParameterTypes().length != expectedArguments.length) {
                         plugin.getLogger().severe("[1] Weird command registration on method " + getClass().getName() + "#" + method.getName());
                         break;
@@ -61,7 +60,7 @@ public class AuctionCommandHandler implements CommandExecutor {
                         }
                         if (!valid) break;
                     }
-                    AuctionCommand auc = (AuctionCommand) annotation;
+                    Command auc = (Command) annotation;
                     List<CommandInfo> existing = commands.get(auc.root());
                     if (existing == null) existing = new ArrayList<CommandInfo>();
                     existing.add(new CommandInfo(auc, method));
@@ -73,7 +72,7 @@ public class AuctionCommandHandler implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String s, String[] args) {
         List<CommandInfo> commandHandlers = commands.get(command.getName());
         if (commandHandlers == null || commandHandlers.isEmpty()) {
             plugin.getLogger().severe("No command handler for command: " + command.getName());
@@ -85,14 +84,14 @@ public class AuctionCommandHandler implements CommandExecutor {
             return true;
         }
         for (CommandInfo handler : commandHandlers) {
-            AuctionCommand annotation = handler.annotation;
+            Command annotation = handler.annotation;
             Method method = handler.method;
             if (annotation.subArgument().equalsIgnoreCase(args[0])) {
                 if (annotation.playersOnly() && !(sender instanceof Player)) {
                     plugin.sendMessage(sender, ChatColor.RED + "You need to be a player to run that command.");
                     return true;
                 }
-                if (!annotation.permission().equalsIgnoreCase(AuctionCommand.NO_PERMISSION) && !sender.hasPermission(annotation.permission())) {
+                if (!annotation.permission().equalsIgnoreCase(Command.NO_PERMISSION) && !sender.hasPermission(annotation.permission())) {
                     plugin.sendMessage(sender, ChatColor.RED + "No permission");
                     return true;
                 }
@@ -102,7 +101,7 @@ public class AuctionCommandHandler implements CommandExecutor {
                     if (annotation1 instanceof ArgumentList) {
                         ArgumentList list = (ArgumentList) annotation1;
                         hasArguments = true;
-                        for (AuctionArgument arg : list.args()) {
+                        for (Argument arg : list.args()) {
                             if (arg.validator() != null) {
                                 int realIndex = arg.index() + 1;
                                 if (realIndex < args.length) {
@@ -160,14 +159,14 @@ public class AuctionCommandHandler implements CommandExecutor {
         return false;
     }
 
-    /*@AuctionCommand(
+    /*@Command(
             root = "auction",
             subArgument = "test",
             usage = "/auc test"
     )
     @ArgumentList(args = {
-            @AuctionArgument(index = 0, subArgument = "test2", optional = false),
-            @AuctionArgument(index = 1, subArgument = "test3", optional = true)
+            @Argument(index = 0, subArgument = "test2", optional = false),
+            @Argument(index = 1, subArgument = "test3", optional = true)
     })
     public boolean testCommand(CommandSender sender, Map<String, Object> args) {
         plugin.sendMessage(sender, ChatColor.AQUA + "Test command.");

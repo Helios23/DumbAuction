@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@interface AuctionArgument {
+@interface Argument {
 
     /**
      * The argument index where index is the number in this example: "/auc start 0 1 2 3"

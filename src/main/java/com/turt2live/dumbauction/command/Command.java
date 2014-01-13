@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@interface AuctionCommand {
+@interface Command {
 
     /**
      * A constant to be used for "no permission needed"
