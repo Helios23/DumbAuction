@@ -135,20 +135,7 @@ public class DumbAuction extends DumbPlugin {
                     if (args.length < 1) {
                         sendMessage(sender, ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc <start | info | showqueue | cancel | toggle | bid>" + ChatColor.RED + "?");
                     } else {
-                        if (args[0].equalsIgnoreCase("showqueue")) {
-                            if (ignoreBroadcast.contains(sender.getName())) {
-                                sendMessage(sender, ChatColor.RED + "You must be listening to auctions to do that.");
-                                return true;
-                            }
-                            List<Auction> queue = auctions.getAuctions();
-                            if (queue.size() > 0) {
-                                for (Auction auction : queue) {
-                                    auction.info(sender, true);
-                                }
-                            } else {
-                                sendMessage(sender, ChatColor.RED + "No queued auctions!");
-                            }
-                        } else if (args[0].equalsIgnoreCase("cancel")) {
+                        else if (args[0].equalsIgnoreCase("cancel")) {
                             if (ignoreBroadcast.contains(sender.getName())) {
                                 sendMessage(sender, ChatColor.RED + "You must be listening to auctions to do that.");
                                 return true;
