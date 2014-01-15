@@ -40,4 +40,17 @@ public class ItemUtil {
         sender.sendMessage("NYI");
     }
 
+    /**
+     * Sends a display of item information to the specified command sender
+     *
+     * @param item      the item to display, cannot be null
+     * @param sender    the command sender to send the display to, cannot be null
+     * @param placement the number to prefix the message. If less than zero, nothing is appended
+     */
+    public static void showQuickInformation(ItemStack item, CommandSender sender, int placement) {
+        if (item == null || sender == null) throw new IllegalArgumentException();
+        // TODO
+        sender.sendMessage((placement >= 0 ? "#" + placement : "") + "NYI");
+    }
+
 }

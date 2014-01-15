@@ -170,6 +170,26 @@ public class AuctionCommandHandler implements CommandExecutor {
 
     @Command(
             root = "auction",
+            subArgument = "showqueue",
+            usage = "/auc showqueue"
+    )
+    public boolean auctionShowQueueCommand(CommandSender sender, Map<String, Object> arguments) {
+        Auction auction = plugin.getAuctionManager().getActiveAuction();
+        if (auction != null) {
+            ItemStack stack = auction.getTemplateItem().clone();
+            stack.setAmount(auction.getItemAmount());
+            ItemUtil.showQuickInformation(stack, sender, plugin.getAuctionManager().getPosition(auction));
+        }
+        for (Auction auction1 : plugin.getAuctionManager().getAuctions()) {
+            ItemStack stack = auction1.getTemplateItem().clone();
+            stack.setAmount(auction1.getItemAmount());
+            ItemUtil.showQuickInformation(stack, sender, plugin.getAuctionManager().getPosition(auction1));
+        }
+        return true;
+    }
+
+    @Command(
+            root = "auction",
             subArgument = "info",
             usage = "/auc info"
     )
