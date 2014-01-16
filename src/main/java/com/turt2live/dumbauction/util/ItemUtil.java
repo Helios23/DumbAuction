@@ -53,4 +53,13 @@ public class ItemUtil {
         sender.sendMessage((placement >= 0 ? "#" + placement : "") + "NYI");
     }
 
+    /**
+     * Gets the name of the item passed
+     *
+     * @param item the item to check, cannot be null
+     * @return the item name
+     */
+    public static String getName(ItemStack item) {
+        return null; // TODO
+    }
 }
