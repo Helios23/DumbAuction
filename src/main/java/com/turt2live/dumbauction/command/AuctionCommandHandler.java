@@ -171,7 +171,8 @@ public class AuctionCommandHandler implements CommandExecutor {
     @Command(
             root = "auction",
             subArgument = "showqueue",
-            usage = "/auc showqueue"
+            usage = "/auc showqueue",
+            permission = "dumbauction.auction"
     )
     public boolean auctionShowQueueCommand(CommandSender sender, Map<String, Object> arguments) {
         Auction auction = plugin.getAuctionManager().getActiveAuction();
@@ -191,7 +192,8 @@ public class AuctionCommandHandler implements CommandExecutor {
     @Command(
             root = "auction",
             subArgument = "info",
-            usage = "/auc info"
+            usage = "/auc info",
+            permission = "dumbauction.auction"
     )
     public boolean auctionInfoCommand(CommandSender sender, Map<String, Object> arguments) {
         Auction auction = plugin.getAuctionManager().getActiveAuction();
@@ -209,7 +211,8 @@ public class AuctionCommandHandler implements CommandExecutor {
             root = "auction",
             subArgument = "start",
             usage = "/auc start [amount] [startPrice] [increment] [time]",
-            playersOnly = true
+            playersOnly = true,
+            permission = "dumbauction.auction"
     )
     @ArgumentList(args = {
             @Argument(index = 0, subArgument = "amount", optional = true, validator = InventoryAmountValidator.class),
