@@ -177,6 +177,19 @@ public class AuctionCommandHandler implements CommandExecutor {
 
     @Command(
             root = "auction",
+            subArgument = "ignore",
+            alternateSubArgs = {"toggle", "stfu", "silence", "ignore", "quiet", "off"},
+            usage = "/auc toggle",
+            permission = "dumbauction.auction"
+    )
+    public boolean auctionIgnoreCommand(CommandSender sender, Map<String, Object> arguments) {
+        plugin.setIgnore(sender.getName(), !plugin.isIgnoring(sender.getName()));
+        plugin.sendMessage(sender, ChatColor.AQUA + "You are now " + (plugin.isIgnoring(sender.getName()) ? ChatColor.RED + "ignoring" : ChatColor.GREEN + "not ignoring") + " auction messages");
+        return true;
+    }
+
+    @Command(
+            root = "auction",
             subArgument = "cancel",
             alternateSubArgs = {"stop"},
             usage = "/auc cancel",

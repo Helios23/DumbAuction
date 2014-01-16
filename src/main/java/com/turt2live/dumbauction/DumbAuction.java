@@ -47,7 +47,6 @@ public class DumbAuction extends DumbPlugin {
     public static DumbAuction p;
     public static Economy economy;
 
-    private List<String> toggles = new ArrayList<String>();
     private AuctionManager auctions;
     private List<String> ignoreBroadcast = new ArrayList<String>();
     private WhatIsItHook whatHook;
@@ -82,12 +81,6 @@ public class DumbAuction extends DumbPlugin {
         getServer().getPluginManager().registerEvents(new InternalListener(), this);
 
         auctions = new AuctionManager();
-        toggles.add("toggle");
-        toggles.add("stfu");
-        toggles.add("silence");
-        toggles.add("ignore");
-        toggles.add("quiet");
-        toggles.add("off");
 
         if (getServer().getPluginManager().getPlugin("WhatIsIt") != null) {
             whatHook = new WhatIsItHook();
@@ -138,12 +131,7 @@ public class DumbAuction extends DumbPlugin {
                     if (args.length < 1) {
                         sendMessage(sender, ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc <start | info | showqueue | cancel | toggle | bid>" + ChatColor.RED + "?");
                     } else {
-                        if (toggles.contains(args[0].toLowerCase())) {
-                            if (ignoreBroadcast.contains(sender.getName())) ignoreBroadcast.remove(sender.getName());
-                            else ignoreBroadcast.add(sender.getName());
-                            getConfig().set("ignore-broadcast", ignoreBroadcast);
-                            sendMessage(sender, ChatColor.YELLOW + "You are now " + (ignoreBroadcast.contains(sender.getName()) ? (ChatColor.RED + "IGNORING") : (ChatColor.GREEN + "NOT IGNORING")) + ChatColor.YELLOW + " auctions.");
-                        } else if (args[0].equalsIgnoreCase("bid")) {
+                        if (args[0].equalsIgnoreCase("bid")) {
                             if (ignoreBroadcast.contains(sender.getName())) {
                                 sendMessage(sender, ChatColor.RED + "You must be listening to auctions to do that.");
                                 return true;
@@ -246,6 +234,15 @@ public class DumbAuction extends DumbPlugin {
         }
         economy = rsp.getProvider();
         return economy != null;
+    }
+
+    public void setIgnore(String player, boolean ignore) {
+        if (ignore) ignoreBroadcast.add(player);
+        else ignoreBroadcast.remove(player);
+    }
+
+    public boolean isIgnoring(String player) {
+        return ignoreBroadcast.contains(player);
     }
 
     public static String getName(ItemStack stack) {
