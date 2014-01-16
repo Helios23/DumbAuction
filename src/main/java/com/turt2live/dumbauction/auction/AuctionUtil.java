@@ -28,7 +28,7 @@ public class AuctionUtil {
         if (auction == null) throw new IllegalArgumentException();
         int amount = auction.getItemAmount();
         ItemStack stack = auction.getTemplateItem();
-        String player = auction.getHighestBid() == null ? auction.getSeller() : auction.getHighestBid().getBidder();
+        String player = auction.getHighestBid() == null || auction.wasCancelled() ? auction.getSeller() : auction.getHighestBid().getBidder();
         List<ItemStack> rewards = new ArrayList<ItemStack>();
         while (amount > 0) {
             ItemStack clone = stack.clone();

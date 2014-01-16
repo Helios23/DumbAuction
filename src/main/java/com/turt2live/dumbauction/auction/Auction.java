@@ -23,6 +23,7 @@ public class Auction {
     private List<Bid> bids = new ArrayList<Bid>();
     private long time;
     private String seller;
+    private boolean wasCancelled = false;
 
     /**
      * Creates a new auction
@@ -163,7 +164,10 @@ public class Auction {
                 AuctionBidEvent event = new AuctionBidEvent(this, bid);
                 DumbAuction.getInstance().getServer().getPluginManager().callEvent(event);
                 if (!event.isCancelled()) {
+                    Bid prevHigh = getHighestBid();
+                    if (!bid.reserveFunds()) return false;
                     bids.add(bid);
+                    if (prevHigh != null) prevHigh.returnFunds();
 
                     // Snipe detection
                     DumbAuction plugin = DumbAuction.getInstance();
@@ -196,8 +200,20 @@ public class Auction {
         return false;
     }
 
+    /**
+     * Determines if this auction was cancelled
+     *
+     * @return true if cancelled, false otherwise
+     */
+    public boolean wasCancelled() {
+        return wasCancelled;
+    }
+
     void cancel() {
-        // todo
+        // Refund bids
+        if (getHighestBid() != null) getHighestBid().returnFunds();
+        this.wasCancelled = true;
+        AuctionUtil.rewardItems(this); // Return items
     }
 
 }
