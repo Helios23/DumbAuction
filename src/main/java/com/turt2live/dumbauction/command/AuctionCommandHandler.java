@@ -93,7 +93,7 @@ public class AuctionCommandHandler implements CommandExecutor {
         for (CommandInfo handler : commandHandlers) {
             Command annotation = handler.annotation;
             Method method = handler.method;
-            if (annotation.subArgument().equalsIgnoreCase(args[0])) {
+            if (annotation.subArgument().equalsIgnoreCase(args[0]) || contains(annotation.alternateSubArgs(), args[0])) {
                 if (annotation.playersOnly() && !(sender instanceof Player)) {
                     plugin.sendMessage(sender, ChatColor.RED + "You need to be a player to run that command.");
                     return true;
@@ -168,9 +168,17 @@ public class AuctionCommandHandler implements CommandExecutor {
         return false;
     }
 
+    private boolean contains(String[] strings, String arg) {
+        for (String s : strings) {
+            if (s.equalsIgnoreCase(arg)) return true;
+        }
+        return false;
+    }
+
     @Command(
             root = "auction",
             subArgument = "cancel",
+            alternateSubArgs = {"stop"},
             usage = "/auc cancel",
             permission = "dumbauction.auction"
     )
@@ -215,6 +223,7 @@ public class AuctionCommandHandler implements CommandExecutor {
     @Command(
             root = "auction",
             subArgument = "info",
+            alternateSubArgs = {"information", "stats"},
             usage = "/auc info",
             permission = "dumbauction.auction"
     )

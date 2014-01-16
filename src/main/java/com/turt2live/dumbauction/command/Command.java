@@ -34,6 +34,13 @@ import java.lang.annotation.Target;
     String subArgument();
 
     /**
+     * Alternate sub arguments
+     *
+     * @return alternate sub arguments
+     */
+    String[] alternateSubArgs() default {};
+
+    /**
      * The permission needed to run this sub-command. If no permission is needed, use {@link #NO_PERMISSION}
      *
      * @return the permission needed to run this command
