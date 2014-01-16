@@ -308,8 +308,8 @@ public class AuctionCommandHandler implements CommandExecutor {
         List<ItemStack> taking = new ArrayList<ItemStack>();
         int taken = 0;
         for (ItemStack itemStack : player.getInventory().getContents()) {
-            int newTaken = taken + itemStack.getAmount();
             if (itemStack == null || !itemStack.isSimilar(hand)) continue;
+            int newTaken = taken + itemStack.getAmount();
             ItemStack stack = itemStack.clone();
             if (newTaken > amount) {
                 stack.setAmount(amount - taken);

@@ -38,8 +38,9 @@ public class DumbAuction extends DumbPlugin {
     > Buy now
 
     TODO: Other stuff
-    > Internal listener for lang and auction events
+    > Internal listener for lang and auction events (reserve items and such)
     > Implementation of new code
+    > MobArena hook re-implement
     > relllleeeassseeee
      */
 

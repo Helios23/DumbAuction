@@ -115,7 +115,7 @@ public class AuctionManager {
      */
     public void stop() {
         paused = true;
-        cancelAuction(activeAuction);
+        if (activeAuction != null) cancelAuction(activeAuction);
         Auction auction;
         while ((auction = auctions.poll()) != null) {
             cancelAuction(auction, AuctionCancelEvent.CancelCause.MANAGER_STOP, null);

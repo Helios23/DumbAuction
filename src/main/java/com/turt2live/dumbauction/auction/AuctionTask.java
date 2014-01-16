@@ -6,12 +6,12 @@ class AuctionTask extends BukkitRunnable {
 
     private AuctionManager manager;
 
-    AuctionTask(AuctionManager manager){
+    AuctionTask(AuctionManager manager) {
         this.manager = manager;
     }
 
     @Override
-    public void run(){
+    public void run() {
         manager.tick();
     }
 }
