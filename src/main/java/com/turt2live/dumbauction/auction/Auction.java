@@ -191,8 +191,6 @@ public class Auction {
                             }
                         }
                     }
-
-
                     return true;
                 }
             }

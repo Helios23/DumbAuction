@@ -60,6 +60,6 @@ public class ItemUtil {
      * @return the item name
      */
     public static String getName(ItemStack item) {
-        return null; // TODO
+        return item.getType().name(); // TODO
     }
 }

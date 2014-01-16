@@ -32,17 +32,20 @@ public class InventoryAmountValidator implements ArgumentValidator {
             ItemStack hand = player.getItemInHand();
             if (hand == null || hand.getType() == Material.AIR) {
                 errors.put(sender.getName(), NO_HAND);
+                return false;
             } else {
                 int maximum = ItemUtil.getCount(hand, player.getInventory());
                 try {
                     int amount = (input.equalsIgnoreCase("*") || input.equalsIgnoreCase("all")) ? maximum : Integer.parseInt(input);
                     if (amount > maximum) {
                         errors.put(sender.getName(), NOT_ENOUGH);
+                        return false;
                     } else {
                         return true;
                     }
                 } catch (NumberFormatException e) {
                     errors.put(sender.getName(), NOT_A_NUMBER);
+                    return false;
                 }
             }
         }

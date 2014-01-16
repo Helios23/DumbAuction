@@ -248,8 +248,10 @@ public class AuctionManager {
             if (auctions.offer(auction)) {
                 AuctionQueuedEvent event = new AuctionQueuedEvent(auction, getPosition(auction));
                 plugin.getServer().getPluginManager().callEvent(event);
-                if (!event.isCancelled())
+                if (!event.isCancelled()) {
+                    AuctionUtil.reserveItems(auction);
                     return true;
+                }
                 auctions.remove(auction);
             }
         }
@@ -365,10 +367,11 @@ public class AuctionManager {
                 }
             }
             if (activeAuction != null) {
+                auctionTimeLeft--;
                 AuctionTickEvent event = new AuctionTickEvent(activeAuction, auctionTimeLeft);
                 plugin.getServer().getPluginManager().callEvent(event);
                 auctionTimeLeft = event.getTimeLeft();
-                if (auctionTimeLeft < 0) {
+                if (auctionTimeLeft <= 0) {
                     currentDowntime = downtimeTicks;
                     plugin.getServer().getPluginManager().callEvent(new AuctionEndEvent(activeAuction));
                     AuctionUtil.rewardItems(activeAuction);

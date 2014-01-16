@@ -30,7 +30,8 @@ public class InternalListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAuctionTick(AuctionTickEvent event) {
-        if (event.getTimeLeft() < 3 || event.getTimeLeft() % 15 == 0) {
+        if (event.getTimeLeft() <= 0) return;
+        if (event.getTimeLeft() <= 3 || event.getTimeLeft() % 15 == 0) {
             plugin.broadcast(ChatColor.AQUA + "" + event.getTimeLeft() + " " + ChatColor.GRAY + "seconds left!");
         }
     }

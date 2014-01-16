@@ -144,7 +144,7 @@ public class AuctionCommandHandler implements CommandExecutor {
                         }
                     }
                 }
-                if (numNonOptional < arguments.size()) {
+                if (numNonOptional > arguments.size()) {
                     plugin.sendMessage(sender, ChatColor.RED + "Incorrect syntax. Try " + ChatColor.YELLOW + annotation.usage());
                     return true;
                 }
@@ -324,22 +324,6 @@ public class AuctionCommandHandler implements CommandExecutor {
         } else {
             plugin.sendMessage(sender, ChatColor.RED + "Bid increment too small!");
             return true;
-        }
-
-        // Generate a list of items we are taking
-        List<ItemStack> taking = new ArrayList<ItemStack>();
-        int taken = 0;
-        for (ItemStack itemStack : player.getInventory().getContents()) {
-            if (itemStack == null || !itemStack.isSimilar(hand)) continue;
-            int newTaken = taken + itemStack.getAmount();
-            ItemStack stack = itemStack.clone();
-            if (newTaken > amount) {
-                stack.setAmount(amount - taken);
-                newTaken = amount;
-            }
-            taking.add(stack);
-            taken = newTaken;
-            if (taken > amount) break;
         }
 
         // Attempt to add the auction

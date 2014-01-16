@@ -61,4 +61,33 @@ public class AuctionUtil {
         return true;
     }
 
+    /**
+     * Reserves the items in the auction by removing them from the seller's inventory
+     *
+     * @param auction the auction to reserve items for, cannot be null
+     */
+    public static void reserveItems(Auction auction) {
+        if (auction == null) throw new IllegalArgumentException();
+        int amount = auction.getItemAmount();
+        ItemStack stack = auction.getTemplateItem();
+        Player player = DumbAuction.getInstance().getServer().getPlayer(auction.getSeller());
+        if (player != null) {
+            ItemStack[] contents = player.getInventory().getContents();
+            for (int i = 0; i < contents.length; i++) {
+                ItemStack test = contents[i];
+                if (test != null && stack.isSimilar(test)) {
+                    int newAmount = amount - test.getAmount();
+                    if (newAmount < 0) {
+                        amount = 0;
+                        test.setAmount(Math.abs(newAmount));
+                        player.getInventory().setItem(i, test);
+                    } else {
+                        player.getInventory().setItem(i, null);
+                    }
+                    if (amount <= 0) return;
+                }
+            }
+        }
+    }
+
 }
