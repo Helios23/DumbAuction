@@ -79,6 +79,8 @@ public class DumbAuction extends DumbPlugin {
             }
         });
 
+        getServer().getPluginManager().registerEvents(new InternalListener(), this);
+
         auctions = new AuctionManager();
         toggles.add("toggle");
         toggles.add("stfu");
