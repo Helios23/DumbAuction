@@ -170,6 +170,29 @@ public class AuctionCommandHandler implements CommandExecutor {
 
     @Command(
             root = "auction",
+            subArgument = "cancel",
+            usage = "/auc cancel",
+            permission = "dumbauction.auction"
+    )
+    public boolean auctionCancelCommand(CommandSender sender, Map<String, Object> arguments) {
+        Auction active = plugin.getAuctionManager().getActiveAuction();
+        if (active == null) {
+            plugin.sendMessage(sender, ChatColor.RED + "There is no active auction!");
+        } else {
+            if (active.getSeller().equalsIgnoreCase(sender.getName()) || sender.hasPermission("dumbauction.admin")) {
+                if (plugin.getAuctionManager().cancelAuction(active, sender))
+                    plugin.sendMessage(sender, ChatColor.GREEN + "Auction cancelled.");
+                else
+                    plugin.sendMessage(sender, ChatColor.RED + "Auction not cancelled");
+            } else {
+                plugin.sendMessage(sender, ChatColor.RED + "You cannot cancel this auction!");
+            }
+        }
+        return true;
+    }
+
+    @Command(
+            root = "auction",
             subArgument = "showqueue",
             usage = "/auc showqueue",
             permission = "dumbauction.auction"

@@ -135,22 +135,7 @@ public class DumbAuction extends DumbPlugin {
                     if (args.length < 1) {
                         sendMessage(sender, ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc <start | info | showqueue | cancel | toggle | bid>" + ChatColor.RED + "?");
                     } else {
-                        else if (args[0].equalsIgnoreCase("cancel")) {
-                            if (ignoreBroadcast.contains(sender.getName())) {
-                                sendMessage(sender, ChatColor.RED + "You must be listening to auctions to do that.");
-                                return true;
-                            }
-                            Auction auction = auctions.getActiveAuction();
-                            if (auction == null) {
-                                sendMessage(sender, ChatColor.RED + "There is no active auction.");
-                                return true;
-                            }
-                            if (auction.getSeller().equalsIgnoreCase(sender.getName()) || sender.hasPermission("dumbauction.admin")) {
-                                auction.cancel(auctions);
-                            } else {
-                                sendMessage(sender, ChatColor.RED + "Not your auction!");
-                            }
-                        } else if (toggles.contains(args[0].toLowerCase())) {
+                        if (toggles.contains(args[0].toLowerCase())) {
                             if (ignoreBroadcast.contains(sender.getName())) ignoreBroadcast.remove(sender.getName());
                             else ignoreBroadcast.add(sender.getName());
                             getConfig().set("ignore-broadcast", ignoreBroadcast);
