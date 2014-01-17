@@ -1,5 +1,3 @@
-##### DumbAuction
-
 ![DumbAuction Logo](http://home.turt2live.com/DumbAuction-BukkitDev-Logo.png)
 
 
