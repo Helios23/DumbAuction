@@ -80,6 +80,12 @@ public class AuctionCommandHandler implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String s, String[] args) {
+        if (command.getName().equalsIgnoreCase("auction")) {
+            if (plugin.getMobArena() != null && plugin.getMobArena().isInArena(plugin, (Player) sender)) {
+                plugin.sendMessage(sender, ChatColor.RED + "You cannot do that in a MobArena!");
+                return true;
+            }
+        }
         List<CommandInfo> commandHandlers = commands.get(command.getName());
         if (commandHandlers == null || commandHandlers.isEmpty()) {
             plugin.getLogger().severe("No command handler for command: " + command.getName());
@@ -173,6 +179,19 @@ public class AuctionCommandHandler implements CommandExecutor {
             if (s.equalsIgnoreCase(arg)) return true;
         }
         return false;
+    }
+
+    @Command(
+            root = "auction",
+            subArgument = "reload",
+            alternateSubArgs = {"rl"},
+            usage = "/auc reload",
+            permission = "dumbauction.admin"
+    )
+    public boolean auctionReloadCommand(CommandSender sender, Map<String, Object> arguments) {
+        plugin.reloadConfig();
+        plugin.sendMessage(sender, ChatColor.GREEN + "Reloaded!");
+        return true;
     }
 
     @Command(

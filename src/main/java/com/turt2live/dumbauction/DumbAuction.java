@@ -9,16 +9,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class DumbAuction extends DumbPlugin {
 
@@ -44,9 +40,9 @@ public class DumbAuction extends DumbPlugin {
     > relllleeeassseeee
      */
 
-    public static DumbAuction p;
-    public static Economy economy;
+    private static DumbAuction p;
 
+    private Economy economy;
     private AuctionManager auctions;
     private List<String> ignoreBroadcast = new ArrayList<String>();
     private WhatIsItHook whatHook;
@@ -161,13 +157,6 @@ public class DumbAuction extends DumbPlugin {
                             } catch (NumberFormatException e) {
                                 sendMessage(sender, ChatColor.RED + "Invalid number!");
                             }
-                        } else if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
-                            if (sender.hasPermission("dumbauction.admin")) {
-                                saveConfig();
-                                reloadConfig();
-                            } else {
-                                sendMessage(sender, ChatColor.RED + "You do not have permission to do that.");
-                            }
                         } else {
                             sendMessage(sender, ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc <start | info | showqueue | cancel | toggle | bid>" + ChatColor.RED + "?");
                         }
@@ -199,16 +188,6 @@ public class DumbAuction extends DumbPlugin {
 
     public MobArenaHook getMobArena() {
         return maHook;
-    }
-
-    private void showAucHelp(CommandSender sender, int n) {
-        String base = ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc start";
-        if (n >= 2) base += " [amount]";
-        if (n >= 3) base += " [starting price]";
-        if (n >= 4) base += " [bid increment]";
-        if (n >= 5) base += " [time]";
-        base += ChatColor.RED + "?";
-        sendMessage(sender, base);
     }
 
     public void sendMessage(CommandSender sender, String message) {
@@ -245,71 +224,6 @@ public class DumbAuction extends DumbPlugin {
         return ignoreBroadcast.contains(player);
     }
 
-    public static String getName(ItemStack stack) {
-        String def = stack.getType().name();
-        if (p.whatHook != null) {
-            def = p.whatHook.getName(stack);
-        } else {
-            if (p.getConfig().getString("aliases." + stack.getType().name()) != null) {
-                def = p.getConfig().getString("aliases." + stack.getType().name());
-            }
-        }
-
-        if (stack.hasItemMeta()) {
-            ItemMeta meta = stack.getItemMeta();
-            if (meta.hasDisplayName()) {
-                def = meta.getDisplayName();
-            }
-        }
-
-        String[] parts = def.split("_");
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < parts.length; i++) {
-            builder.append(parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase());
-            builder.append(" ");
-        }
-        return builder.toString().trim();
-    }
-
-    public static void displayItem(CommandSender sender, ItemStack stack, int amount) {
-        p.sendMessage(sender, ChatColor.BLUE + getName(stack) + ChatColor.BLUE + " x" + amount);
-        if (stack.hasItemMeta()) {
-            ItemMeta meta = stack.getItemMeta();
-            if (meta.hasDisplayName()) {
-                String def = stack.getType().name();
-                if (p.whatHook != null) {
-                    def = p.whatHook.getName(stack);
-                } else {
-                    if (p.getConfig().getString("aliases." + stack.getType().name()) != null) {
-                        def = p.getConfig().getString("aliases." + stack.getType().name());
-                    }
-                }
-                String[] parts = def.split("_");
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < parts.length; i++) {
-                    builder.append(parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase());
-                    builder.append(" ");
-                }
-                def = builder.toString().trim();
-                p.sendMessage(sender, ChatColor.DARK_AQUA + "Real Item Type: " + def);
-            }
-            if (meta.hasLore()) {
-                p.sendMessage(sender, ChatColor.LIGHT_PURPLE + "Lore: ");
-                for (String s : meta.getLore()) {
-                    p.sendMessage(sender, "  " + s);
-                }
-                p.sendMessage(sender, " ");
-            }
-        }
-        if (stack.getEnchantments() != null && !stack.getEnchantments().isEmpty()) {
-            Map<Enchantment, Integer> enchants = stack.getEnchantments();
-            for (Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
-                String enchantName = Items.getEnchantmentName(e);
-                p.sendMessage(sender, ChatColor.AQUA + enchantName);
-            }
-        }
-    }
-
     /**
      * Gets the active instance of DumbAuction
      *
@@ -318,4 +232,23 @@ public class DumbAuction extends DumbPlugin {
     public static DumbAuction getInstance() {
         return p;
     }
+
+    /**
+     * Gets the WhatIsIt Hook, if present
+     *
+     * @return the hook, or null if not loaded
+     */
+    public WhatIsItHook getWhatIsIt() {
+        return whatHook;
+    }
+
+    /**
+     * Gets the Vault economy hook
+     *
+     * @return Vault economy hook
+     */
+    public Economy getEconomy() {
+        return economy;
+    }
+
 }
