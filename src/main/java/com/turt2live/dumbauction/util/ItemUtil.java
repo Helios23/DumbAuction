@@ -22,8 +22,7 @@ public class ItemUtil {
         if (inventory == null) throw new IllegalArgumentException();
         int count = 0;
         for (ItemStack stack : inventory.getContents()) {
-            if (stack == null && template == null) count++;
-            else if (stack != null && template.isSimilar(stack)) count++;
+            if (stack != null && template.isSimilar(stack)) count += stack.getAmount();
         }
         return count;
     }
