@@ -2,6 +2,7 @@ package com.turt2live.dumbauction.command;
 
 import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.auction.Auction;
+import com.turt2live.dumbauction.auction.Bid;
 import com.turt2live.dumbauction.command.validator.ArgumentValidator;
 import com.turt2live.dumbauction.command.validator.DoubleValidator;
 import com.turt2live.dumbauction.command.validator.IntValidator;
@@ -179,6 +180,36 @@ public class AuctionCommandHandler implements CommandExecutor {
             if (s.equalsIgnoreCase(arg)) return true;
         }
         return false;
+    }
+
+    @Command(
+            root = "auction",
+            subArgument = "bid",
+            usage = "/auc bid [amount]",
+            permission = "dumbauction.auction",
+            playersOnly = true
+    )
+    @ArgumentList(args = {
+            @Argument(index = 0, optional = true, subArgument = "amount", validator = DoubleValidator.class)
+    })
+    public boolean auctionBidCommand(CommandSender sender, Map<String, Object> arguments) {
+        Auction auction = plugin.getAuctionManager().getActiveAuction();
+        if (auction == null) {
+            plugin.sendMessage(sender, ChatColor.RED + "There is no active auction!");
+            return true;
+        }
+        double bid = arguments.containsKey("amount") ? (Double) arguments.get("amount") : auction.getNextMinimum();
+        if (!plugin.getEconomy().has(sender.getName(), bid)) {
+            plugin.sendMessage(sender, ChatColor.RED + "You do not have enough to bid on that!");
+            return true;
+        }
+
+        Bid bid1 = new Bid(sender.getName(), bid);
+        if (!auction.submitBid(bid1)) {
+            plugin.sendMessage(sender, ChatColor.RED + "Could not submit bid!");
+        }
+        // No need to tell them they bid, it will be posted in chat...
+        return true;
     }
 
     @Command(

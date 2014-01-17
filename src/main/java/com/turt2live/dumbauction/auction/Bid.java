@@ -52,7 +52,7 @@ public class Bid {
      * @return true if the bidder has enough funds
      */
     public boolean hasEnough() {
-        return DumbAuction.economy.has(bidder, amount);
+        return plugin.getEconomy().has(bidder, amount);
     }
 
     /**
@@ -63,7 +63,7 @@ public class Bid {
      */
     public boolean reserveFunds() {
         if (!isReserved) {
-            EconomyResponse response = DumbAuction.economy.withdrawPlayer(bidder, amount);
+            EconomyResponse response = plugin.getEconomy().withdrawPlayer(bidder, amount);
             if (response.transactionSuccess()) {
                 isReserved = true;
             } else {
@@ -91,7 +91,7 @@ public class Bid {
      */
     public boolean returnFunds() {
         if (isReserved) {
-            EconomyResponse response = DumbAuction.economy.depositPlayer(bidder, amount);
+            EconomyResponse response = plugin.getEconomy().depositPlayer(bidder, amount);
             if (response.transactionSuccess()) {
                 isReserved = false;
             } else {

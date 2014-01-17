@@ -18,8 +18,8 @@ public class InternalListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAuctionStart(AuctionStartEvent event) {
         String seller = event.getAuction().getSeller();
-        String startCost = DumbAuction.economy.format(event.getAuction().getMinimumBid());
-        String bidIncrement = DumbAuction.economy.format(event.getAuction().getBidIncrement());
+        String startCost = plugin.getEconomy().format(event.getAuction().getMinimumBid());
+        String bidIncrement = plugin.getEconomy().format(event.getAuction().getBidIncrement());
         String time = event.getAuction().getRequiredTime() + " seconds";
         String itemName = ItemUtil.getName(event.getAuction().getTemplateItem());
 
@@ -63,7 +63,7 @@ public class InternalListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAuctionBid(AuctionBidEvent event) {
-        plugin.broadcast(ChatColor.AQUA + event.getBid().getBidder() + ChatColor.GRAY + " has bid " + ChatColor.AQUA + DumbAuction.economy.format(event.getBid().getAmount()));
+        plugin.broadcast(ChatColor.AQUA + event.getBid().getBidder() + ChatColor.GRAY + " has bid " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -71,7 +71,7 @@ public class InternalListener implements Listener {
         Auction auction = event.getAuction();
         String rewardee = event.getRewardee();
         if (!auction.getSeller().equalsIgnoreCase(rewardee)) {
-            plugin.broadcast(ChatColor.AQUA + rewardee + ChatColor.GRAY + " has won the auction with " + ChatColor.AQUA + DumbAuction.economy.format(auction.getHighestBid().getAmount()));
+            plugin.broadcast(ChatColor.AQUA + rewardee + ChatColor.GRAY + " has won the auction with " + ChatColor.AQUA + plugin.getEconomy().format(auction.getHighestBid().getAmount()));
         }
     }
 

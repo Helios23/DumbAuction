@@ -87,9 +87,9 @@ public class OfflineQueue implements Listener {
                 for (ItemStack item : overflow.values()) {
                     drop.getWorld().dropItemNaturally(drop, item);
                 }
-                DumbAuction.p.sendMessage(player, ChatColor.RED + "" + ChatColor.BOLD + "Some of your auctions went on the ground - Full inventory");
+                DumbAuction.getInstance().sendMessage(player, ChatColor.RED + "" + ChatColor.BOLD + "Some of your auctions went on the ground - Full inventory");
             }
-            DumbAuction.p.sendMessage(player, ChatColor.GREEN + "Winnings from auctions you bid on were given to you.");
+            DumbAuction.getInstance().sendMessage(player, ChatColor.GREEN + "Winnings from auctions you bid on were given to you.");
         }
     }
 

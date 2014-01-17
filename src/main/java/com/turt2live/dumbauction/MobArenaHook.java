@@ -20,7 +20,7 @@ public class MobArenaHook implements Listener {
     private Map<String, List<ItemStack>> failed = new HashMap<String, List<ItemStack>>();
 
     public MobArenaHook() {
-        DumbAuction.p.getServer().getPluginManager().registerEvents(this, DumbAuction.p);
+        DumbAuction.getInstance().getServer().getPluginManager().registerEvents(this, DumbAuction.getInstance());
     }
 
     public boolean isInArena(DumbAuction plugin, Player player) {
@@ -40,7 +40,7 @@ public class MobArenaHook implements Listener {
 
     @EventHandler
     public void onLeave(final ArenaPlayerLeaveEvent event) {
-        DumbAuction.p.getServer().getScheduler().scheduleSyncDelayedTask(DumbAuction.p, new Runnable() {
+        DumbAuction.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(DumbAuction.getInstance(), new Runnable() {
             @Override
             public void run() {
                 List<ItemStack> items = winnings.get(event.getPlayer().getName());
