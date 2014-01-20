@@ -92,8 +92,8 @@ public class DumbAuction extends DumbPlugin {
 
         rewardStores = new StoreRegistry();
         try {
+            if (maHook != null) rewardStores.addStore(maHook);
             rewardStores.addStore(new OfflineStore(this));
-            rewardStores.addStore(maHook);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidConfigurationException e) {
