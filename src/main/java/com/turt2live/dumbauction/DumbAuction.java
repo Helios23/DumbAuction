@@ -25,12 +25,9 @@ public class DumbAuction extends DumbPlugin {
     > Logging to file
     > Creative mode blocking
     > Damaged items deny
-    > Global stfu
+    > Global stfu (pause)
     > Banned items
-    > Deposit tax to specified user account
     > Prevent gm change
-    > Sealed bidding (silent auction)
-    > Auction house
     > Ability to disable specified lore/display name messages
     > Impound (admin cancel)
     > Buy now
