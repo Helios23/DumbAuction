@@ -36,7 +36,6 @@ public class DumbAuction extends DumbPlugin {
     TODO: Other stuff
     > Internal listener for lang and auction events (reserve items and such)
     > Implementation of new code
-    > MobArena hook re-implement
     > relllleeeassseeee
      */
 
@@ -112,71 +111,6 @@ public class DumbAuction extends DumbPlugin {
             e.printStackTrace();
         }
     }
-
-   /* @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("auction")) {
-            if (!sender.hasPermission("dumbauction.auction")) {
-                sendMessage(sender, ChatColor.RED + "No permission.");
-            } else {
-                if (sender instanceof Player) {
-                    if (maHook != null && maHook.isInArena(this, (Player) sender)) {
-                        sendMessage(sender, ChatColor.RED + "You cannot do that in a MobArena!");
-                        return true;
-                    }
-                    if (args.length < 1) {
-                        sendMessage(sender, ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc <start | info | showqueue | cancel | toggle | bid>" + ChatColor.RED + "?");
-                    } else {
-                        if (args[0].equalsIgnoreCase("bid")) {
-                            if (ignoreBroadcast.contains(sender.getName())) {
-                                sendMessage(sender, ChatColor.RED + "You must be listening to auctions to do that.");
-                                return true;
-                            }
-                            Auction auction = auctions.getActiveAuction();
-                            if (auction == null) {
-                                sendMessage(sender, ChatColor.RED + "There is no active auction.");
-                                return true;
-                            }
-                            if (auction.getSeller().equalsIgnoreCase(sender.getName())) {
-                                sendMessage(sender, ChatColor.RED + "You cannot bid on your own auction");
-                                return true;
-                            }
-                            if (auction.getHighBidder() != null && auction.getHighBidder().equalsIgnoreCase(sender.getName())) {
-                                sendMessage(sender, ChatColor.RED + "You are already the high bidder!");
-                                return true;
-                            }
-                            try {
-                                double bid = args.length > 1 ? Double.parseDouble(args[1]) : (auction.hasBids() ? auction.getHighBid() + auction.getBidIncrement() : auction.getStartAmount());
-                                if (DumbAuction.economy.has(sender.getName(), bid)) {
-                                    if (!auction.bid(sender.getName(), bid)) {
-                                        sendMessage(sender, ChatColor.RED + "Invalid bid! Please see the increment!");
-                                    }
-                                } else {
-                                    sendMessage(sender, ChatColor.RED + "You cannot afford that!");
-                                }
-                            } catch (NumberFormatException e) {
-                                sendMessage(sender, ChatColor.RED + "Invalid number!");
-                            }
-                        } else {
-                            sendMessage(sender, ChatColor.RED + "Incorrect syntax. Did you mean " + ChatColor.YELLOW + "/auc <start | info | showqueue | cancel | toggle | bid>" + ChatColor.RED + "?");
-                        }
-                    }
-                } else {
-                    sendMessage(sender, ChatColor.RED + "No");
-                }
-            }
-        } else if (command.getName().equalsIgnoreCase("bid")) {
-            String[] newArgs = new String[args.length + 1];
-            newArgs[0] = "bid";
-            for (int i = 0; i < newArgs.length - 1; i++) {
-                newArgs[i + 1] = args[i];
-            }
-            return onCommand(sender, getCommand("auction"), "auction", newArgs);
-        } else {
-            sendMessage(sender, ChatColor.RED + "Something broke.");
-        }
-        return true;
-    }*/
 
     public OfflineQueue getQueue() {
         return queue;
