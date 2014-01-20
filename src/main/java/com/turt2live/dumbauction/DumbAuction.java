@@ -32,11 +32,6 @@ public class DumbAuction extends DumbPlugin {
     > Ability to disable specified lore/display name messages
     > Impound (admin cancel)
     > Buy now
-
-    TODO: Other stuff
-    > Internal listener for lang and auction events (reserve items and such)
-    > Implementation of new code
-    > relllleeeassseeee
      */
 
     private static DumbAuction p;
