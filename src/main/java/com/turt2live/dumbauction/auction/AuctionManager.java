@@ -339,7 +339,7 @@ public class AuctionManager {
             isActive = true;
         }
         if (!found) return false;
-        AuctionCancelEvent event = sender == null && cancelCause != AuctionCancelEvent.CancelCause.COMMAND ? new AuctionCancelEvent(auction, cancelCause) : new AuctionCancelEvent(auction, cancelCause, sender);
+        AuctionCancelEvent event = cancelCause != AuctionCancelEvent.CancelCause.COMMAND ? new AuctionCancelEvent(auction, cancelCause) : new AuctionCancelEvent(auction, cancelCause, sender);
         plugin.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             if (isActive) {

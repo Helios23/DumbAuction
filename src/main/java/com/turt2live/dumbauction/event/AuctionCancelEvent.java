@@ -59,7 +59,7 @@ public class AuctionCancelEvent extends AuctionCancellableEvent {
      */
     public AuctionCancelEvent(Auction auction, CancelCause cause, CommandSender canceller) {
         super(auction);
-        if (cause == null || cause == CancelCause.COMMAND || canceller == null) throw new IllegalArgumentException();
+        if (cause == null || cause != CancelCause.COMMAND || canceller == null) throw new IllegalArgumentException();
         this.cause = cause;
         this.canceller = canceller;
     }
