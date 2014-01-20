@@ -4,9 +4,11 @@ import com.turt2live.dumbauction.auction.Auction;
 import com.turt2live.dumbauction.event.*;
 import com.turt2live.dumbauction.util.ItemUtil;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Internal listener for plugin operation
@@ -75,4 +77,17 @@ public class InternalListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onOverflow(RewardOverflowEvent event) {
+        Player player = plugin.getServer().getPlayerExact(event.getRewardee());
+        for (ItemStack item : event.getRewards()) {
+            if (player != null) {
+                player.getWorld().dropItemNaturally(player.getLocation(), item);
+            } else {
+                plugin.getQueue().addToQueue(event.getRewardee(), item);
+            }
+        }
+        if (player != null)
+            plugin.sendMessage(player, ChatColor.RED + "Your inventory was full and some items were dropped.");
+    }
 }
