@@ -40,7 +40,10 @@ public class InternalListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAuctionExtend(AuctionTimeExtendedEvent event) {
-        plugin.broadcast(ChatColor.GRAY + "The auction time has been extended by " + ChatColor.AQUA + "" + event.getExtension() + " seconds");
+        if (event.getExtension() > 0)
+            plugin.broadcast(ChatColor.GRAY + "The auction time has been extended by " + ChatColor.AQUA + "" + event.getExtension() + " seconds");
+        else if (event.getExtension() < 0)
+            plugin.broadcast(ChatColor.GRAY + "The auction time has been shortened by " + ChatColor.AQUA + "" + (event.getExtension() * -1) + " seconds");
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -65,7 +68,9 @@ public class InternalListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAuctionBid(AuctionBidEvent event) {
-        plugin.broadcast(ChatColor.AQUA + event.getBid().getBidder() + ChatColor.GRAY + " has bid " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
+        if (event.getClass().equals(AuctionBidEvent.class)) {
+            plugin.broadcast(ChatColor.AQUA + event.getBid().getBidder() + ChatColor.GRAY + " has bid " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
