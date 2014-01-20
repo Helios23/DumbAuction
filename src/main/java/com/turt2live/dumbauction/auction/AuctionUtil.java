@@ -82,6 +82,7 @@ public class AuctionUtil {
                         test.setAmount(Math.abs(newAmount));
                         player.getInventory().setItem(i, test);
                     } else {
+                        amount -= test.getAmount();
                         player.getInventory().setItem(i, null);
                     }
                     if (amount <= 0) return;
