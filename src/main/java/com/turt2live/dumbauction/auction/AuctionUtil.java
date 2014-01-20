@@ -3,6 +3,7 @@ package com.turt2live.dumbauction.auction;
 import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.event.AuctionRewardEvent;
 import com.turt2live.dumbauction.event.RewardOverflowEvent;
+import com.turt2live.dumbauction.rewards.RewardStore;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -46,16 +47,17 @@ public class AuctionUtil {
         player = event.getRewardee();
 
         Player onlinePlayer = DumbAuction.getInstance().getServer().getPlayerExact(player);
-        if (onlinePlayer != null) {
-            HashMap<Integer, ItemStack> overflow = onlinePlayer.getInventory().addItem(rewards.toArray(new ItemStack[0]));
-            if (overflow != null && !overflow.isEmpty()) {
-                List<ItemStack> over = new ArrayList<ItemStack>();
-                over.addAll(overflow.values());
-                DumbAuction.getInstance().getServer().getPluginManager().callEvent(new RewardOverflowEvent(over, onlinePlayer.getName()));
-            }
+        RewardStore store = DumbAuction.getInstance().getRewardStores().getApplicableStore(player);
+        if (store != null) {
+            store.store(player, rewards);
         } else {
-            for (ItemStack item : rewards) {
-                DumbAuction.getInstance().getQueue().addToQueue(player, item);
+            if (onlinePlayer != null) {
+                HashMap<Integer, ItemStack> overflow = onlinePlayer.getInventory().addItem(rewards.toArray(new ItemStack[0]));
+                if (overflow != null && !overflow.isEmpty()) {
+                    List<ItemStack> over = new ArrayList<ItemStack>();
+                    over.addAll(overflow.values());
+                    DumbAuction.getInstance().getServer().getPluginManager().callEvent(new RewardOverflowEvent(over, onlinePlayer.getName()));
+                }
             }
         }
         return true;
@@ -66,6 +68,7 @@ public class AuctionUtil {
      *
      * @param auction the auction to reserve items for, cannot be null
      */
+
     public static void reserveItems(Auction auction) {
         if (auction == null) throw new IllegalArgumentException();
         int amount = auction.getItemAmount();

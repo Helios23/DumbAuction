@@ -3,6 +3,8 @@ package com.turt2live.dumbauction;
 import com.turt2live.commonsense.DumbPlugin;
 import com.turt2live.dumbauction.auction.AuctionManager;
 import com.turt2live.dumbauction.command.AuctionCommandHandler;
+import com.turt2live.dumbauction.rewards.OfflineStore;
+import com.turt2live.dumbauction.rewards.StoreRegistry;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -40,7 +42,7 @@ public class DumbAuction extends DumbPlugin {
     private AuctionManager auctions;
     private List<String> ignoreBroadcast = new ArrayList<String>();
     private WhatIsItHook whatHook;
-    private OfflineQueue queue;
+    private StoreRegistry rewardStores;
     private MobArenaHook maHook;
 
     @Override
@@ -77,7 +79,13 @@ public class DumbAuction extends DumbPlugin {
         }
 
         if (getServer().getPluginManager().getPlugin("MobArena") != null) {
-            maHook = new MobArenaHook();
+            try {
+                maHook = new MobArenaHook();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
         }
 
         ignoreBroadcast = getConfig().getStringList("ignore-broadcast");
@@ -85,8 +93,10 @@ public class DumbAuction extends DumbPlugin {
             ignoreBroadcast = new ArrayList<String>();
         }
 
+        rewardStores = new StoreRegistry();
         try {
-            queue = new OfflineQueue(this);
+            rewardStores.addStore(new OfflineStore(this));
+            rewardStores.addStore(maHook);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidConfigurationException e) {
@@ -98,17 +108,11 @@ public class DumbAuction extends DumbPlugin {
     public void onDisable() {
         p = null;
         if (auctions != null) auctions.stop(); // Returns items
-        if (queue != null) try {
-            queue.save();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+        if (rewardStores != null) rewardStores.save();
     }
 
-    public OfflineQueue getQueue() {
-        return queue;
+    public StoreRegistry getRewardStores() {
+        return rewardStores;
     }
 
     public AuctionManager getAuctionManager() {

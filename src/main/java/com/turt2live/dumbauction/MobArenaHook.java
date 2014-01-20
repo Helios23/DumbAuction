@@ -2,25 +2,22 @@ package com.turt2live.dumbauction;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.garbagemule.MobArena.events.ArenaPlayerLeaveEvent;
+import com.turt2live.dumbauction.rewards.OfflineStore;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 
-public class MobArenaHook implements Listener {
+public class MobArenaHook extends OfflineStore implements Listener {
 
     private final String enableNode = "hooks.mobarena.protect";
     private MobArenaHandler handler;
-    private Map<String, List<ItemStack>> winnings = new HashMap<String, List<ItemStack>>();
-    private Map<String, List<ItemStack>> failed = new HashMap<String, List<ItemStack>>();
 
-    public MobArenaHook() {
-        DumbAuction.getInstance().getServer().getPluginManager().registerEvents(this, DumbAuction.getInstance());
+    public MobArenaHook() throws IOException, InvalidConfigurationException {
+        super(DumbAuction.getInstance(), "mobarena.yml");
+        // Events registered in super
     }
 
     public boolean isInArena(DumbAuction plugin, Player player) {
@@ -31,31 +28,19 @@ public class MobArenaHook implements Listener {
         return false;
     }
 
-    public void queue(Player player, List<ItemStack> items, boolean win) {
-        List<ItemStack> existing = (win ? winnings : failed).get(player.getName());
-        if (existing == null) existing = new ArrayList<ItemStack>();
-        existing.addAll(items);
-        (win ? winnings : failed).put(player.getName(), existing);
-    }
-
     @EventHandler
     public void onLeave(final ArenaPlayerLeaveEvent event) {
         DumbAuction.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(DumbAuction.getInstance(), new Runnable() {
             @Override
             public void run() {
-                List<ItemStack> items = winnings.get(event.getPlayer().getName());
-                if (items != null) {
-                    // TODO
-                    //Auction.rewardItems(event.getPlayer(), items, true);
-                }
-                items = failed.get(event.getPlayer().getName());
-                if (items != null) {
-                    // TODO
-                    // Auction.rewardItems(event.getPlayer(), items, false);
-                }
-                winnings.remove(event.getPlayer().getName());
-                failed.remove(event.getPlayer().getName());
+                distributeStore(event.getPlayer().getName(), null); // Message handled internally
             }
         }, 5L);
+    }
+
+    @Override
+    public boolean isApplicable(String player) {
+        if (DumbAuction.getInstance().getServer().getPlayerExact(player) == null) return false;
+        return isInArena(DumbAuction.getInstance(), DumbAuction.getInstance().getServer().getPlayerExact(player));
     }
 }

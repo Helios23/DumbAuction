@@ -2,6 +2,7 @@ package com.turt2live.dumbauction;
 
 import com.turt2live.dumbauction.auction.Auction;
 import com.turt2live.dumbauction.event.*;
+import com.turt2live.dumbauction.rewards.RewardStore;
 import com.turt2live.dumbauction.util.ItemUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -89,7 +90,10 @@ public class InternalListener implements Listener {
             if (player != null) {
                 player.getWorld().dropItemNaturally(player.getLocation(), item);
             } else {
-                plugin.getQueue().addToQueue(event.getRewardee(), item);
+                RewardStore store = plugin.getRewardStores().getApplicableStore(event.getRewardee());
+                if (store != null) {
+                    store.store(event.getRewardee(), item);
+                }
             }
         }
         if (player != null)
