@@ -203,8 +203,8 @@ public class AuctionManager {
     public void setAuctionTimeLeft(long auctionTimeLeft) {
         if (activeAuction != null) {
             if (auctionTimeLeft < 0) throw new IllegalArgumentException();
-            if (this.auctionTimeLeft < auctionTimeLeft) {
-
+            if (this.auctionTimeLeft != auctionTimeLeft) {
+                plugin.getServer().getPluginManager().callEvent(new AuctionTimeExtendedEvent(activeAuction, auctionTimeLeft, this.auctionTimeLeft));
             }
             this.auctionTimeLeft = auctionTimeLeft;
         }
