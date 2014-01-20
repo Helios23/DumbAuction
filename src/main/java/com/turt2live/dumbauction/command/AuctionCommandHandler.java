@@ -190,7 +190,7 @@ public class AuctionCommandHandler implements CommandExecutor {
             playersOnly = true
     )
     @ArgumentList(args = {
-            @Argument(index = 0, optional = true, subArgument = "amount", validator = DoubleValidator.class)
+            @Argument(index = 0, optional = true, subArgument = "amount", validator = DoubleValidator.class, validatorArguments = {"Please supply a valid amount!"})
     })
     public boolean auctionBidCommand(CommandSender sender, Map<String, Object> arguments) {
         Auction auction = plugin.getAuctionManager().getActiveAuction();
@@ -201,6 +201,14 @@ public class AuctionCommandHandler implements CommandExecutor {
         double bid = arguments.containsKey("amount") ? (Double) arguments.get("amount") : auction.getNextMinimum();
         if (!plugin.getEconomy().has(sender.getName(), bid)) {
             plugin.sendMessage(sender, ChatColor.RED + "You do not have enough to bid on that!");
+            return true;
+        }
+        if (auction.getSeller().equalsIgnoreCase(sender.getName())) {
+            plugin.sendMessage(sender, ChatColor.RED + "You can't bid on your own auction!");
+            return true;
+        }
+        if (auction.getHighestBid() != null && auction.getHighestBid().getBidder().equalsIgnoreCase(sender.getName())) {
+            plugin.sendMessage(sender, ChatColor.RED + "You are already the highest bidder!");
             return true;
         }
 

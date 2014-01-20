@@ -42,7 +42,7 @@ public class DoubleValidator implements ArgumentValidator {
         if (arguments.length < 1)
             throw new IllegalArgumentException("requires 1 string argument");
         if (arguments.length > 1)
-            DumbAuction.getInstance().getLogger().warning("Extra arguments supplied in IntValidator");
+            DumbAuction.getInstance().getLogger().warning("Extra arguments supplied in DoubleValidator");
         error = arguments[0];
     }
 }

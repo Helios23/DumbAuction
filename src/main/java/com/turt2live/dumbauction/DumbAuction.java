@@ -65,7 +65,7 @@ public class DumbAuction extends DumbPlugin {
             @Override
             public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
                 String[] strings1 = new String[strings.length + 1];
-                strings[0] = "bid";
+                strings1[0] = "bid";
                 for (int i = 0; i < strings.length; i++) {
                     strings1[i + 1] = strings[i];
                 }
