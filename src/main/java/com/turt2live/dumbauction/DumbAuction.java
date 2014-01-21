@@ -22,7 +22,6 @@ public class DumbAuction extends DumbPlugin {
 
     /*
     TODO: Missing Features
-    > Logging to file
     > Creative mode blocking
     > Damaged items deny
     > Global stfu (pause)
