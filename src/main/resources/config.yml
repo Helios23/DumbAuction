@@ -65,6 +65,16 @@ hooks:
         # and getting items while in an arena.
         protect: true
 
+# Settings for auction stuff
+auctions:
+    allow-creative-mode: false
+    allow-damaged-items: false
+    allow-renamed-items: true
+    blacklist:
+    - AIR
+    word-blacklist:
+    - Spigot
+
 # Add items here to rename them from the Bukkit name, eg: DIAMOND_SWORD: 'Diamond Stick' to make "Diamond Stick" appear
 # instaed of "Diamond Sword". If you have WhatIsIt on your server, that is used instead.
 aliases:
