@@ -180,4 +180,8 @@ public class DumbAuction extends DumbPlugin {
         return economy;
     }
 
+    public static boolean isDenyCreative() {
+        return !getInstance().getConfig().getBoolean("auctions.allow-creative-mode", false);
+    }
+
 }

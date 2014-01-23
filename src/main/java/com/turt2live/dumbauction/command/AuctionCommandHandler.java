@@ -9,6 +9,7 @@ import com.turt2live.dumbauction.command.validator.IntValidator;
 import com.turt2live.dumbauction.command.validator.InventoryAmountValidator;
 import com.turt2live.dumbauction.util.ItemUtil;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -84,6 +85,10 @@ public class AuctionCommandHandler implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("auction")) {
             if (plugin.getMobArena() != null && plugin.getMobArena().isInArena(plugin, (Player) sender)) {
                 plugin.sendMessage(sender, ChatColor.RED + "You cannot do that in a MobArena!");
+                return true;
+            }
+            if (DumbAuction.isDenyCreative() && (sender instanceof Player) && ((Player) sender).getGameMode() == GameMode.CREATIVE) {
+                plugin.sendMessage(sender, ChatColor.RED + "You cannot do that in Creative Mode!");
                 return true;
             }
         }
