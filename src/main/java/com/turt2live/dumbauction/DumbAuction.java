@@ -22,12 +22,8 @@ public class DumbAuction extends DumbPlugin {
 
     /*
     TODO: Missing Features
-    > Creative mode blocking
-    > Damaged items deny
     > Global stfu (pause)
-    > Banned items
     > Prevent gm change
-    > Ability to disable specified lore/display name messages
     > Impound (admin cancel)
     > Buy now
      */
