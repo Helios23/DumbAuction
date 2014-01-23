@@ -87,7 +87,7 @@ public class AuctionCommandHandler implements CommandExecutor {
                 plugin.sendMessage(sender, ChatColor.RED + "You cannot do that in a MobArena!");
                 return true;
             }
-            if (DumbAuction.isDenyCreative() && (sender instanceof Player) && ((Player) sender).getGameMode() == GameMode.CREATIVE) {
+            if (!plugin.getConfig().getBoolean("auctions.allow-creative-mode", false) && (sender instanceof Player) && ((Player) sender).getGameMode() == GameMode.CREATIVE) {
                 plugin.sendMessage(sender, ChatColor.RED + "You cannot do that in Creative Mode!");
                 return true;
             }
