@@ -384,18 +384,22 @@ public class AuctionCommandHandler implements CommandExecutor {
             if (hand.hasItemMeta()) {
                 ItemMeta meta = hand.getItemMeta();
                 if (meta.hasDisplayName()) {
-                    if (lower.contains(ChatColor.stripColor(meta.getDisplayName().toLowerCase()))) {
-                        plugin.sendMessage(sender, ChatColor.RED + "That item has words/phrases that are not permitted.");
-                        return true;
+                    for (String bad : lower) {
+                        if (ChatColor.stripColor(meta.getDisplayName().toLowerCase()).contains(bad)) {
+                            plugin.sendMessage(sender, ChatColor.RED + "That item has words/phrases that are not permitted.");
+                            return true;
+                        }
                     }
                 }
                 if (meta.hasLore()) {
                     List<String> lore = meta.getLore();
                     if (lore != null && lore.size() > 0) {
                         for (String listItem : lore) {
-                            if (lower.contains(ChatColor.stripColor(listItem.toLowerCase()))) {
-                                plugin.sendMessage(sender, ChatColor.RED + "That item has words/phrases that are not permitted.");
-                                return true;
+                            for (String bad : lower) {
+                                if (ChatColor.stripColor(listItem.toLowerCase()).contains(bad)) {
+                                    plugin.sendMessage(sender, ChatColor.RED + "That item has words/phrases that are not permitted.");
+                                    return true;
+                                }
                             }
                         }
                     }
