@@ -8,6 +8,8 @@ import com.turt2live.dumbauction.command.validator.DoubleValidator;
 import com.turt2live.dumbauction.command.validator.IntValidator;
 import com.turt2live.dumbauction.command.validator.InventoryAmountValidator;
 import com.turt2live.dumbauction.util.ItemUtil;
+import net.milkbowl.vault.item.ItemInfo;
+import net.milkbowl.vault.item.Items;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -15,6 +17,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -348,6 +351,56 @@ public class AuctionCommandHandler implements CommandExecutor {
         if (plugin.getAuctionManager().hasAuction(sender.getName())) {
             plugin.sendMessage(sender, ChatColor.RED + "You already have an auction in the queue!");
             return true;
+        }
+
+        // Validate item
+        if (!plugin.getConfig().getBoolean("auctions.allow-damaged-items", false) && hand.getType().getMaxDurability() > hand.getDurability()) {
+            plugin.sendMessage(sender, ChatColor.RED + "You cannot auction damaged items");
+            return true;
+        }
+        if (!plugin.getConfig().getBoolean("auctions.allow-renamed-items", false) && hand.hasItemMeta() && hand.getItemMeta().hasDisplayName()) {
+            plugin.sendMessage(sender, ChatColor.RED + "You cannot auction renamed items");
+            return true;
+        }
+
+        // Check blacklist
+        List<String> disallowedItems = plugin.getConfig().getStringList("auctions.blacklist");
+        if (disallowedItems != null && disallowedItems.size() > 0) {
+            for (String bad : disallowedItems) {
+                ItemInfo info = Items.itemByName(bad);
+                if (info.toStack().isSimilar(hand)) {
+                    plugin.sendMessage(sender, ChatColor.RED + "That item cannot be sold!");
+                    return true;
+                }
+            }
+        }
+
+        // Check lore/display name blacklist
+        List<String> disallowedWords = plugin.getConfig().getStringList("auctions.word-blacklist");
+        if (disallowedWords != null && disallowedWords.size() > 0) {
+            List<String> lower = new ArrayList<String>();
+            for (String word : disallowedWords) lower.add(word.toLowerCase());
+
+            if (hand.hasItemMeta()) {
+                ItemMeta meta = hand.getItemMeta();
+                if (meta.hasDisplayName()) {
+                    if (lower.contains(ChatColor.stripColor(meta.getDisplayName().toLowerCase()))) {
+                        plugin.sendMessage(sender, ChatColor.RED + "That item has words/phrases that are not permitted.");
+                        return true;
+                    }
+                }
+                if (meta.hasLore()) {
+                    List<String> lore = meta.getLore();
+                    if (lore != null && lore.size() > 0) {
+                        for (String listItem : lore) {
+                            if (lower.contains(ChatColor.stripColor(listItem.toLowerCase()))) {
+                                plugin.sendMessage(sender, ChatColor.RED + "That item has words/phrases that are not permitted.");
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Pre-validated variables
