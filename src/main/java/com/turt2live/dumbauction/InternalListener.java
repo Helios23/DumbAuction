@@ -99,4 +99,9 @@ public class InternalListener implements Listener {
         if (player != null)
             plugin.sendMessage(player, ChatColor.RED + "Your inventory was full and some items were dropped.");
     }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onImpound(AuctionImpoundEvent event) {
+        plugin.broadcast(ChatColor.AQUA + event.getImpounder().getName() + ChatColor.RED + " has impounded the auction");
+    }
 }

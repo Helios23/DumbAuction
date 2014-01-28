@@ -1,6 +1,7 @@
 package com.turt2live.dumbauction.auction;
 
 import com.turt2live.dumbauction.DumbAuction;
+import com.turt2live.dumbauction.event.AuctionImpoundEvent;
 import com.turt2live.dumbauction.event.AuctionRewardEvent;
 import com.turt2live.dumbauction.event.RewardOverflowEvent;
 import com.turt2live.dumbauction.rewards.RewardStore;
@@ -61,6 +62,41 @@ public class AuctionUtil {
             }
         }
         return true;
+    }
+
+    // Silent item rewards
+    static void impoundItems(Auction auction, Player player) {
+        if (auction == null || player == null) throw new IllegalArgumentException();
+        int amount = auction.getItemAmount();
+        ItemStack stack = auction.getTemplateItem();
+        List<ItemStack> rewards = new ArrayList<ItemStack>();
+        while (amount > 0) {
+            ItemStack clone = stack.clone();
+            int desiredAmount = clone.getType().getMaxStackSize();
+            if (amount - desiredAmount < 0) desiredAmount = amount;
+            clone.setAmount(desiredAmount);
+            rewards.add(clone);
+            amount -= desiredAmount;
+        }
+
+        // Fire the event for message sake
+        DumbAuction.getInstance().getServer().getPluginManager().callEvent(new AuctionImpoundEvent(auction, player));
+
+        Player onlinePlayer = DumbAuction.getInstance().getServer().getPlayerExact(player.getName());
+        RewardStore store = DumbAuction.getInstance().getRewardStores().getApplicableStore(player.getName());
+        if (store != null) {
+            store.store(player.getName(), rewards);
+        } else {
+            if (onlinePlayer != null) {
+                HashMap<Integer, ItemStack> overflow = onlinePlayer.getInventory().addItem(rewards.toArray(new ItemStack[0]));
+                if (overflow != null && !overflow.isEmpty()) {
+                    List<ItemStack> over = new ArrayList<ItemStack>();
+                    over.addAll(overflow.values());
+                    DumbAuction.getInstance().getServer().getPluginManager().callEvent(new RewardOverflowEvent(over, onlinePlayer.getName()));
+                }
+            }
+        }
+        return;
     }
 
     /**

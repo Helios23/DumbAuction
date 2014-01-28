@@ -3,6 +3,7 @@ package com.turt2live.dumbauction.auction;
 import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.event.*;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -378,6 +379,38 @@ public class AuctionManager {
                     activeAuction = null;
                 }
             }
+        }
+    }
+
+    /**
+     * Impounds an auction
+     *
+     * @param auction the auction to impound
+     * @param player  the player to reward the items to
+     */
+    public void impound(Auction auction, Player player) {
+        boolean found = false;
+        boolean isActive = false;
+        for (Auction auction1 : auctions) {
+            if (auction1.getSeller().equalsIgnoreCase(auction.getSeller())) {
+                found = true;
+                break;
+            }
+        }
+        if (activeAuction != null && activeAuction.getSeller().equalsIgnoreCase(auction.getSeller())) {
+            found = true;
+            isActive = true;
+        }
+        if (!found) return;
+
+        // We have to fire our own event down here so we don't reward them items using the built in cancel methods
+        plugin.getServer().getPluginManager().callEvent(new AuctionCancelEvent(auction, AuctionCancelEvent.CancelCause.IMPOUND)); // JavaDocs state we ignore the cancel state of the event
+
+        if (isActive) {
+            activeAuction.impound(player); // Does an internal cancel
+            activeAuction = null;
+        } else {
+            auctions.remove(auction);
         }
     }
 }

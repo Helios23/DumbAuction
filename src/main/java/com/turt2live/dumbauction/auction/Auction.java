@@ -3,6 +3,7 @@ package com.turt2live.dumbauction.auction;
 import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.event.AuctionBidEvent;
 import com.turt2live.dumbauction.event.AuctionSnipeEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -207,11 +208,19 @@ public class Auction {
         return wasCancelled;
     }
 
-    void cancel() {
-        // Refund bids
+    private void refundCancel() {
         if (getHighestBid() != null) getHighestBid().returnFunds();
         this.wasCancelled = true;
+    }
+
+    void cancel() {
+        refundCancel();
         AuctionUtil.rewardItems(this); // Return items
+    }
+
+    void impound(Player player) {
+        refundCancel();
+        AuctionUtil.impoundItems(this, player);
     }
 
 }

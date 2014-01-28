@@ -320,6 +320,25 @@ public class AuctionCommandHandler implements CommandExecutor {
 
     @Command(
             root = "auction",
+            subArgument = "impound",
+            alternateSubArgs = {"take", "admin", "seal", "no"},
+            usage = "/auc impound",
+            permission = "dumbauction.admin",
+            playersOnly = true
+    )
+    public boolean auctionImpoundCommand(CommandSender sender, Map<String, Object> arguments) {
+        Player player = (Player)sender; // Validated by @Command
+        Auction active = plugin.getAuctionManager().getActiveAuction();
+        if(active==null){
+            plugin.sendMessage(sender,ChatColor.RED+"There is no auction in progress!");
+            return true;
+        }
+        plugin.getAuctionManager().impound(active, player);
+        return true;
+    }
+
+    @Command(
+            root = "auction",
             subArgument = "start",
             usage = "/auc start [amount] [startPrice] [increment] [time]",
             playersOnly = true,

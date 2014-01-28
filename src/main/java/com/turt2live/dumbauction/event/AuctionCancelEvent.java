@@ -30,7 +30,12 @@ public class AuctionCancelEvent extends AuctionCancellableEvent {
         /**
          * The auction was cancelled by unknown means (hooking plugin?)
          */
-        MAGIC;
+        MAGIC,
+
+        /**
+         * The auction was cancelled due to an impound. The cancelled state of the {@link com.turt2live.dumbauction.event.AuctionCancelEvent} is ignored
+         */
+        IMPOUND;
     }
 
     protected CancelCause cause;
