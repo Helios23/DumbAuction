@@ -344,6 +344,7 @@ public class AuctionManager {
         plugin.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             if (isActive) {
+                currentDowntime = downtimeTicks;
                 activeAuction.cancel();
                 activeAuction = null;
             } else {
@@ -407,6 +408,7 @@ public class AuctionManager {
         plugin.getServer().getPluginManager().callEvent(new AuctionCancelEvent(auction, AuctionCancelEvent.CancelCause.IMPOUND)); // JavaDocs state we ignore the cancel state of the event
 
         if (isActive) {
+            currentDowntime = downtimeTicks;
             activeAuction.impound(player); // Does an internal cancel
             activeAuction = null;
         } else {
