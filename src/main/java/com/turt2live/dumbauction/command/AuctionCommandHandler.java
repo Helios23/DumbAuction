@@ -354,7 +354,7 @@ public class AuctionCommandHandler implements CommandExecutor {
         }
 
         // Validate item
-        if (!plugin.getConfig().getBoolean("auctions.allow-damaged-items", false) && hand.getType().getMaxDurability() > hand.getDurability()) {
+        if (!plugin.getConfig().getBoolean("auctions.allow-damaged-items", false) && hand.getType().getMaxDurability() > 0 && hand.getDurability() != 0) {
             plugin.sendMessage(sender, ChatColor.RED + "You cannot auction damaged items");
             return true;
         }
