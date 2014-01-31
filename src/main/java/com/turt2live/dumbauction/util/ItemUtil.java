@@ -43,7 +43,9 @@ public class ItemUtil {
     }
 
     /**
-     * Sends a display of item information to the specified command sender
+     * Sends a display of item information to the specified command sender. This is used for sending
+     * the current auction queue to a command sender and therefore the resulting text is a "short hand"
+     * version.
      *
      * @param item      the item to display, cannot be null
      * @param sender    the command sender to send the display to, cannot be null
