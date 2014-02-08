@@ -76,7 +76,7 @@ public class ItemUtil {
         // TODO: "Blue Wool", etc
 
         StringBuilder builder = new StringBuilder();
-        builder.append(getName(item)).append(" ");
+        builder.append(ChatColor.BOLD).append(getName(item)).append(" ");
         if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
             builder.append(ChatColor.ITALIC).append("(").append(getName(item, true)).append(") ");
         }
@@ -159,18 +159,18 @@ public class ItemUtil {
                         for (Color color : effect.getColors()) {
                             ChatColor chat = ChatColorPalette.matchColor(color.getRed(), color.getGreen(), color.getBlue());
                             String name = getChatName(chat);
-                            builder.append(chat).append(name).append(" ");
+                            builder.append(chat).append(name).append(ChatColor.GRAY).append(", ");
                         }
-                        metaMessage.add(ChatColor.GRAY + "    Colors: " + builder.toString().trim());
+                        metaMessage.add(ChatColor.GRAY + "    Colors: " + builder.toString().substring(0, builder.toString().length() - 2));
                     }
                     if (effect.getFadeColors().size() > 0) {
                         builder = new StringBuilder();
                         for (Color color : effect.getFadeColors()) {
                             ChatColor chat = ChatColorPalette.matchColor(color.getRed(), color.getGreen(), color.getBlue());
                             String name = getChatName(chat);
-                            builder.append(chat).append(name).append(" ");
+                            builder.append(chat).append(name).append(ChatColor.GRAY).append(", ");
                         }
-                        metaMessage.add(ChatColor.GRAY + "    Fade Colors: " + builder.toString().trim());
+                        metaMessage.add(ChatColor.GRAY + "    Fade Colors: " + builder.toString().substring(0, builder.toString().length() - 2));
                     }
                 }
                 metaMessage.add(ChatColor.DARK_GRAY + "-------------");
