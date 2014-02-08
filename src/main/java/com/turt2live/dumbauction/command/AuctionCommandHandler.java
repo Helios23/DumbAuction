@@ -313,6 +313,8 @@ public class AuctionCommandHandler implements CommandExecutor {
         } else {
             ItemStack stack = auction.getTemplateItem().clone();
             stack.setAmount(auction.getItemAmount());
+            // TODO: Show auction information, such as bids
+            plugin.sendMessage(sender, ChatColor.DARK_GREEN + "Item Information: ");
             ItemUtil.showInformation(stack, sender);
         }
         return true;
@@ -327,10 +329,10 @@ public class AuctionCommandHandler implements CommandExecutor {
             playersOnly = true
     )
     public boolean auctionImpoundCommand(CommandSender sender, Map<String, Object> arguments) {
-        Player player = (Player)sender; // Validated by @Command
+        Player player = (Player) sender; // Validated by @Command
         Auction active = plugin.getAuctionManager().getActiveAuction();
-        if(active==null){
-            plugin.sendMessage(sender,ChatColor.RED+"There is no auction in progress!");
+        if (active == null) {
+            plugin.sendMessage(sender, ChatColor.RED + "There is no auction in progress!");
             return true;
         }
         plugin.getAuctionManager().impound(active, player);
