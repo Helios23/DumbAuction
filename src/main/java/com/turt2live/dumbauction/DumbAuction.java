@@ -20,11 +20,6 @@ import java.util.List;
 
 public class DumbAuction extends DumbPlugin {
 
-    /*
-    TODO: Missing Features
-    > Buy now
-     */
-
     private static DumbAuction p;
 
     private Economy economy;
