@@ -94,6 +94,9 @@ public class DumbAuction extends DumbPlugin {
         p = null;
         if (auctions != null) auctions.stop(); // Returns items
         if (rewardStores != null) rewardStores.save();
+
+        getConfig().set("ignore-broadcast", ignoreBroadcast);
+        saveConfig();
     }
 
     public StoreRegistry getRewardStores() {
