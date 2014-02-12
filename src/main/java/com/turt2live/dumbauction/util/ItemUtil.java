@@ -88,7 +88,11 @@ public class ItemUtil {
             DumbAuction.getInstance().sendMessage(sender, ChatColor.GRAY + "Durability: " + ChatColor.AQUA + "" + percent + "%");
         }
 
-        Potion pot = Potion.fromItemStack(item);
+        Potion pot = null;
+        try {
+            pot = Potion.fromItemStack(item);
+        } catch (Exception e) {
+        } // Consume error
         List<String> metaMessage = new ArrayList<String>();
         if (item.hasItemMeta() || pot != null) {
             ItemMeta meta = item.getItemMeta();
