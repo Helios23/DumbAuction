@@ -119,7 +119,7 @@ public class AuctionManager {
         if (!plugin.getEconomy().has(player.getName(), activeAuction.getMinimumBid())) return false;
         boolean bid = activeAuction.submitBid(new BuyingBid(player.getDisplayName(), player.getName(), activeAuction.getMinimumBid()));
         if (bid) {
-            this.auctionTimeLeft = -1;
+            this.auctionTimeLeft = 1; // Will be ticked DOWN to zero
             tick();
         }
         return bid;
