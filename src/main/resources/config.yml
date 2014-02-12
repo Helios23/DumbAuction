@@ -70,6 +70,8 @@ auctions:
     allow-creative-mode: false
     allow-damaged-items: false
     allow-renamed-items: true
+    # If true, DumbAuction will deny the highest bidder and the auctioneer from changing gamemodes
+    allow-gamemode-change: false
     # Item types to blacklist
     blacklist:
     - AIR

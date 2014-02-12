@@ -23,7 +23,6 @@ public class DumbAuction extends DumbPlugin {
     /*
     TODO: Missing Features
     > Global stfu (pause)
-    > Prevent gm change
     > Buy now
      */
 
