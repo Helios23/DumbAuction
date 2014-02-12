@@ -38,6 +38,7 @@ public interface ArgumentValidator {
 
     /**
      * Sets the arguments to be used by this validator
+     *
      * @param arguments the arguments to use
      */
     public void setArguments(String[] arguments);
