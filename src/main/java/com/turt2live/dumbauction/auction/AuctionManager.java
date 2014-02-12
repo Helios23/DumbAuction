@@ -117,7 +117,7 @@ public class AuctionManager {
         if (player == null) throw new IllegalArgumentException();
         if (!canBuyNow()) return false;
         if (!plugin.getEconomy().has(player.getName(), activeAuction.getMinimumBid())) return false;
-        boolean bid = activeAuction.submitBid(new BuyingBid(player.getName(), activeAuction.getMinimumBid()));
+        boolean bid = activeAuction.submitBid(new BuyingBid(player.getDisplayName(), player.getName(), activeAuction.getMinimumBid()));
         if (bid) {
             this.auctionTimeLeft = -1;
             tick();
