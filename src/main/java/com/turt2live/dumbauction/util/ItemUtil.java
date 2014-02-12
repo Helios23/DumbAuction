@@ -270,7 +270,44 @@ public class ItemUtil {
     public static String getPotionEffectName(PotionEffectType type) {
         if (type == null) throw new IllegalArgumentException();
 
-        return type.getName(); // TODO
+        if (type == PotionEffectType.DAMAGE_RESISTANCE)
+            return "Damage Resistance";
+        else if (type == PotionEffectType.BLINDNESS)
+            return "Blindness";
+        else if (type == PotionEffectType.FAST_DIGGING)
+            return "Haste";
+        else if (type == PotionEffectType.FIRE_RESISTANCE)
+            return "Fire Resistance";
+        else if (type == PotionEffectType.HARM)
+            return "Harming";
+        else if (type == PotionEffectType.HEAL)
+            return "Healing";
+        else if (type == PotionEffectType.HUNGER)
+            return "Hunger";
+        else if (type == PotionEffectType.JUMP)
+            return "Jump Boost";
+        else if (type == PotionEffectType.POISON)
+            return "Poison";
+        else if (type == PotionEffectType.REGENERATION)
+            return "Regeneration";
+        else if (type == PotionEffectType.SLOW)
+            return "Slowness";
+        else if (type == PotionEffectType.SPEED)
+            return "Swiftness";
+        else if (type == PotionEffectType.INCREASE_DAMAGE)
+            return "Strength";
+        else if (type == PotionEffectType.WATER_BREATHING)
+            return "Water Breathing";
+        else if (type == PotionEffectType.WEAKNESS)
+            return "Weakness";
+        else if (type == PotionEffectType.WITHER)
+            return "Wither";
+        else if (type == PotionEffectType.INVISIBILITY)
+            return "Invisibility";
+        else if (type == PotionEffectType.NIGHT_VISION)
+            return "Night Vison";
+
+        return "Unknown Potion Effect";
     }
 
     /**
@@ -282,7 +319,50 @@ public class ItemUtil {
     public static String getEnchantmentName(Enchantment enchantment) {
         if (enchantment == null) throw new IllegalArgumentException();
 
-        return enchantment.getName(); // TODO
+        if (enchantment == Enchantment.DAMAGE_ALL)
+            return "Sharpness";
+        else if (enchantment == Enchantment.DAMAGE_ARTHROPODS)
+            return "Bane of Arthropods";
+        else if (enchantment == Enchantment.DAMAGE_UNDEAD)
+            return "Smite";
+        else if (enchantment == Enchantment.DIG_SPEED)
+            return "Efficiency";
+        else if (enchantment == Enchantment.DURABILITY)
+            return "Unbreaking";
+        else if (enchantment == Enchantment.FIRE_ASPECT)
+            return "Fire Aspect";
+        else if (enchantment == Enchantment.KNOCKBACK)
+            return "Knockback";
+        else if (enchantment == Enchantment.LOOT_BONUS_BLOCKS)
+            return "Fortune";
+        else if (enchantment == Enchantment.LOOT_BONUS_MOBS)
+            return "Looting";
+        else if (enchantment == Enchantment.OXYGEN)
+            return "Respiration";
+        else if (enchantment == Enchantment.PROTECTION_ENVIRONMENTAL)
+            return "Protection";
+        else if (enchantment == Enchantment.PROTECTION_EXPLOSIONS)
+            return "Blast Protection";
+        else if (enchantment == Enchantment.PROTECTION_FALL)
+            return "Feather Falling";
+        else if (enchantment == Enchantment.PROTECTION_FIRE)
+            return "Fire Protection";
+        else if (enchantment == Enchantment.PROTECTION_PROJECTILE)
+            return "Projectile Protection";
+        else if (enchantment == Enchantment.SILK_TOUCH)
+            return "Silk Touch";
+        else if (enchantment == Enchantment.WATER_WORKER)
+            return "Aqua Affinity";
+        else if (enchantment == Enchantment.ARROW_FIRE)
+            return "Fire Arrows";
+        else if (enchantment == Enchantment.ARROW_DAMAGE)
+            return "Power";
+        else if (enchantment == Enchantment.ARROW_KNOCKBACK)
+            return "Punch";
+        else if (enchantment == Enchantment.ARROW_INFINITE)
+            return "Infinity";
+
+        return "Unknown Enchantment";
     }
 
     private static String integerToRomanNumeral(int input) {
