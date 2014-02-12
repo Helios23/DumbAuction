@@ -313,7 +313,16 @@ public class AuctionCommandHandler implements CommandExecutor {
         } else {
             ItemStack stack = auction.getTemplateItem().clone();
             stack.setAmount(auction.getItemAmount());
-            // TODO: Show auction information, such as bids
+
+            String seller = auction.getSeller();
+            String startCost = plugin.getEconomy().format(auction.getMinimumBid());
+            String bidIncrement = plugin.getEconomy().format(auction.getBidIncrement());
+            String time = plugin.getAuctionManager().getAuctionTimeLeft() + " seconds";
+            String itemName = ItemUtil.getName(auction.getTemplateItem());
+
+            // Send messages
+            plugin.sendMessage(sender, ChatColor.GOLD + seller + ChatColor.YELLOW + " has started an auction for " + ChatColor.GOLD + auction.getItemAmount() + "x " + itemName + ChatColor.YELLOW + " for " + ChatColor.GOLD + time);
+            plugin.sendMessage(sender, ChatColor.GRAY + "Starting Price: " + ChatColor.AQUA + startCost + "   " + ChatColor.GRAY + "Bid Increment: " + ChatColor.AQUA + bidIncrement);
             plugin.sendMessage(sender, ChatColor.DARK_GREEN + "Item Information: ");
             ItemUtil.showInformation(stack, sender);
         }
