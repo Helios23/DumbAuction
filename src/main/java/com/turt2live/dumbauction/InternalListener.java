@@ -72,9 +72,9 @@ public class InternalListener implements Listener {
     public void onAuctionBid(AuctionBidEvent event) {
         if (event.getClass().equals(AuctionBidEvent.class)) {
             if (event.getBid() instanceof BuyingBid) {
-                plugin.broadcast(ChatColor.AQUA + event.getBid().getBidder() + ChatColor.GRAY + " has purchased the auction for " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
+                plugin.broadcast(ChatColor.AQUA + (plugin.getConfig().getBoolean("auctions.use-displayname", true) ? event.getBid().getBidder() : event.getBid().getRealBidder()) + ChatColor.GRAY + " has purchased the auction for " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
             } else {
-                plugin.broadcast(ChatColor.AQUA + event.getBid().getBidder() + ChatColor.GRAY + " has bid " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
+                plugin.broadcast(ChatColor.AQUA + (plugin.getConfig().getBoolean("auctions.use-displayname", true) ? event.getBid().getBidder() : event.getBid().getRealBidder()) + ChatColor.GRAY + " has bid " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
             }
         }
     }

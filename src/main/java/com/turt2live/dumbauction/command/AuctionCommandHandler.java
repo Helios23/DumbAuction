@@ -324,7 +324,7 @@ public class AuctionCommandHandler implements CommandExecutor {
             plugin.sendMessage(sender, ChatColor.GRAY + "Seller: " + ChatColor.DARK_AQUA + seller);
             plugin.sendMessage(sender, ChatColor.GRAY + "Starting Price: " + ChatColor.AQUA + startCost);
             plugin.sendMessage(sender, ChatColor.GRAY + "Bid Increment: " + ChatColor.AQUA + bidIncrement);
-            plugin.sendMessage(sender, ChatColor.GRAY + "Highest Bidder: " + ChatColor.AQUA + (bid == null ? (ChatColor.ITALIC + "no one!") : bid.getBidder() + " (" + plugin.getEconomy().format(bid.getAmount()) + ")"));
+            plugin.sendMessage(sender, ChatColor.GRAY + "Highest Bidder: " + ChatColor.AQUA + (bid == null ? (ChatColor.ITALIC + "no one!") : (plugin.getConfig().getBoolean("auctions.use-displayname", true) ? bid.getBidder() : bid.getRealBidder()) + " (" + plugin.getEconomy().format(bid.getAmount()) + ")"));
             plugin.sendMessage(sender, ChatColor.GRAY + "Time Left: " + ChatColor.GOLD + time);
             plugin.sendMessage(sender, ChatColor.DARK_GREEN + "Item Information: ");
             ItemUtil.showInformation(stack, sender);
