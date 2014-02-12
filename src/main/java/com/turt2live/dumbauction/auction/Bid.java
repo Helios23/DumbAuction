@@ -12,20 +12,32 @@ public class Bid {
 
     private double amount;
     private String bidder;
+    private String realBidder;
     private boolean isReserved;
     private DumbAuction plugin = DumbAuction.getInstance();
 
     /**
      * Creates a new bid
      *
-     * @param bidder the bidder, cannot be null
-     * @param amount the amount to bid, must be greater than zero
+     * @param bidder     the bidder, cannot be null
+     * @param realBidder the real bidder's name, cannot be null
+     * @param amount     the amount to bid, must be greater than zero
      */
-    public Bid(String bidder, double amount) {
-        if (bidder == null || amount <= 0)
+    public Bid(String bidder, String realBidder, double amount) {
+        if (bidder == null || amount <= 0 || realBidder == null)
             throw new IllegalArgumentException("bidder cannot be null. amount must be > 0");
         this.bidder = bidder;
+        this.realBidder = realBidder;
         this.amount = amount;
+    }
+
+    /**
+     * Gets the real bidder's name
+     *
+     * @return the real bidder's name
+     */
+    public String getRealBidder() {
+        return realBidder;
     }
 
     /**
@@ -52,7 +64,7 @@ public class Bid {
      * @return true if the bidder has enough funds
      */
     public boolean hasEnough() {
-        return plugin.getEconomy().has(bidder, amount);
+        return plugin.getEconomy().has(realBidder, amount);
     }
 
     /**
@@ -63,7 +75,7 @@ public class Bid {
      */
     public boolean reserveFunds() {
         if (!isReserved) {
-            EconomyResponse response = plugin.getEconomy().withdrawPlayer(bidder, amount);
+            EconomyResponse response = plugin.getEconomy().withdrawPlayer(realBidder, amount);
             if (response.transactionSuccess()) {
                 isReserved = true;
             } else {
@@ -91,7 +103,7 @@ public class Bid {
      */
     public boolean returnFunds() {
         if (isReserved) {
-            EconomyResponse response = plugin.getEconomy().depositPlayer(bidder, amount);
+            EconomyResponse response = plugin.getEconomy().depositPlayer(realBidder, amount);
             if (response.transactionSuccess()) {
                 isReserved = false;
             } else {

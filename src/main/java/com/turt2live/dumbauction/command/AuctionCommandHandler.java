@@ -215,12 +215,12 @@ public class AuctionCommandHandler implements CommandExecutor {
             plugin.sendMessage(sender, ChatColor.RED + "You can't bid on your own auction!");
             return true;
         }
-        if (auction.getHighestBid() != null && auction.getHighestBid().getBidder().equalsIgnoreCase(sender.getName())) {
+        if (auction.getHighestBid() != null && auction.getHighestBid().getRealBidder().equalsIgnoreCase(sender.getName())) {
             plugin.sendMessage(sender, ChatColor.RED + "You are already the highest bidder!");
             return true;
         }
 
-        Bid bid1 = new Bid(sender.getName(), bid);
+        Bid bid1 = new Bid(sender instanceof Player ? ((Player) sender).getDisplayName() : sender.getName(), sender.getName(), bid);
         if (!auction.submitBid(bid1)) {
             plugin.sendMessage(sender, ChatColor.RED + "Could not submit bid!");
         }

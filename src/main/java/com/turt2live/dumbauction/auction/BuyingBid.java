@@ -10,11 +10,12 @@ public class BuyingBid extends Bid {
     /**
      * Creates a new bid
      *
-     * @param bidder the bidder, cannot be null
-     * @param amount the amount to bid, must be greater than zero
+     * @param bidder     the bidder, cannot be null
+     * @param realBidder the real bidder's name, cannot be null
+     * @param amount     the amount to bid, must be greater than zero
      */
-    public BuyingBid(String bidder, double amount) {
-        super(bidder, amount);
+    public BuyingBid(String bidder, String realBidder, double amount) {
+        super(bidder, realBidder, amount);
     }
 
 }

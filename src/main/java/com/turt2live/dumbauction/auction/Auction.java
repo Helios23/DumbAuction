@@ -159,10 +159,7 @@ public class Auction {
      * @return true if the bid would be accepted
      */
     public boolean canAccept(Bid bid) {
-        if (bid != null) {
-            return bid.getAmount() >= getNextMinimum();
-        }
-        return false;
+        return bid != null && bid.getAmount() >= getNextMinimum();
     }
 
     /**

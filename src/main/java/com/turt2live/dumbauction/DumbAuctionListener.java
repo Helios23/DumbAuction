@@ -23,7 +23,7 @@ public class DumbAuctionListener implements Listener {
         if (!player.hasPermission("dumbauction.admin") && !plugin.getConfig().getBoolean("auctions.allow-gamemode-change", false)) {
             Auction auction = plugin.getAuctionManager().getActiveAuction();
             if (auction.getRealSeller().equalsIgnoreCase(player.getName())
-                    || (auction.getHighestBid() != null && auction.getHighestBid().getBidder().equalsIgnoreCase(player.getName()))) {
+                    || (auction.getHighestBid() != null && auction.getHighestBid().getRealBidder().equalsIgnoreCase(player.getName()))) {
                 event.setCancelled(true);
                 plugin.sendMessage(player, ChatColor.RED + "You cannot change game modes right now.");
             }
