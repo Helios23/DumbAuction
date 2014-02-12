@@ -3,12 +3,14 @@ package com.turt2live.dumbauction.util;
 import com.turt2live.dumbauction.DumbAuction;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.material.Colorable;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -52,8 +54,6 @@ public class ItemUtil {
     public static void showQuickInformation(ItemStack item, CommandSender sender, int placement) {
         if (item == null || sender == null) throw new IllegalArgumentException();
 
-        // TODO: "Blue Wool", etc
-
         StringBuilder builder = new StringBuilder();
         builder.append(getName(item)).append(" ");
         if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
@@ -72,8 +72,6 @@ public class ItemUtil {
      */
     public static void showInformation(ItemStack item, CommandSender sender) {
         if (item == null || sender == null) throw new IllegalArgumentException();
-
-        // TODO: "Blue Wool", etc
 
         StringBuilder builder = new StringBuilder();
         builder.append(ChatColor.BOLD).append(getName(item)).append(" ");
@@ -451,6 +449,11 @@ public class ItemUtil {
             }
         }
 
+        DyeColor color = getDyeColor(item);
+        if (color != null) {
+            def = color.name() + "_" + def; // underscore is stripped later, capitals are also fixed
+        }
+
         // ItemMeta always overrides everything else
         if (!ignoreMeta && item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
@@ -466,5 +469,20 @@ public class ItemUtil {
             builder.append(" ");
         }
         return builder.toString().trim();
+    }
+
+    /**
+     * Gets the dye color for a specified type of ItemStack.
+     *
+     * @param stack the stack to get the color of
+     * @return the color of the stack, or null if not applicable (or invalid arguments)
+     */
+    public static DyeColor getDyeColor(ItemStack stack) {
+        if (stack == null) return null;
+
+        if (stack.getData() instanceof Colorable) {
+            return ((Colorable) stack.getData()).getColor();
+        }
+        return null;
     }
 }
