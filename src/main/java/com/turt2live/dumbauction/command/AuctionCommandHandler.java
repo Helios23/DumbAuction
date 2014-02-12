@@ -334,6 +334,40 @@ public class AuctionCommandHandler implements CommandExecutor {
 
     @Command(
             root = "auction",
+            subArgument = "pause",
+            alternateSubArgs = {"stop", "halt", "wait"},
+            usage = "/auc pause",
+            permission = "dumbauction.admin"
+    )
+    public boolean auctionPauseCommand(CommandSender sender, Map<String, Object> arguments) {
+        if (!plugin.getAuctionManager().isPaused()) {
+            plugin.broadcast(ChatColor.RED + sender.getName() + " has paused the auction queue!");
+            plugin.getAuctionManager().setPaused(true);
+        } else {
+            plugin.sendMessage(sender, ChatColor.RED + "Auction queue is already paused");
+        }
+        return true;
+    }
+
+    @Command(
+            root = "auction",
+            subArgument = "resume",
+            alternateSubArgs = {"unpause", "go"},
+            usage = "/auc resume",
+            permission = "dumbauction.admin"
+    )
+    public boolean auctionResumeCommand(CommandSender sender, Map<String, Object> arguments) {
+        if (plugin.getAuctionManager().isPaused()) {
+            plugin.broadcast(ChatColor.GREEN + sender.getName() + " has resumed the auction queue!");
+            plugin.getAuctionManager().setPaused(false);
+        } else {
+            plugin.sendMessage(sender, ChatColor.RED + "Auction queue not paused.");
+        }
+        return true;
+    }
+
+    @Command(
+            root = "auction",
             subArgument = "impound",
             alternateSubArgs = {"take", "admin", "seal", "no"},
             usage = "/auc impound",
