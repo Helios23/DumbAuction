@@ -318,11 +318,14 @@ public class AuctionCommandHandler implements CommandExecutor {
             String startCost = plugin.getEconomy().format(auction.getMinimumBid());
             String bidIncrement = plugin.getEconomy().format(auction.getBidIncrement());
             String time = plugin.getAuctionManager().getAuctionTimeLeft() + " seconds";
-            String itemName = ItemUtil.getName(auction.getTemplateItem());
+            Bid bid = auction.getHighestBid();
 
             // Send messages
-            plugin.sendMessage(sender, ChatColor.GOLD + seller + ChatColor.YELLOW + " has started an auction for " + ChatColor.GOLD + auction.getItemAmount() + "x " + itemName + ChatColor.YELLOW + " for " + ChatColor.GOLD + time);
-            plugin.sendMessage(sender, ChatColor.GRAY + "Starting Price: " + ChatColor.AQUA + startCost + "   " + ChatColor.GRAY + "Bid Increment: " + ChatColor.AQUA + bidIncrement);
+            plugin.sendMessage(sender, ChatColor.GRAY + "Seller: " + ChatColor.DARK_AQUA + seller);
+            plugin.sendMessage(sender, ChatColor.GRAY + "Starting Price: " + ChatColor.AQUA + startCost);
+            plugin.sendMessage(sender, ChatColor.GRAY + "Bid Increment: " + ChatColor.AQUA + bidIncrement);
+            plugin.sendMessage(sender, ChatColor.GRAY + "Highest Bidder: " + ChatColor.AQUA + (bid == null ? (ChatColor.ITALIC + "no one!") : bid.getBidder() + " (" + plugin.getEconomy().format(bid.getAmount()) + ")"));
+            plugin.sendMessage(sender, ChatColor.GRAY + "Time Left: " + ChatColor.GOLD + time);
             plugin.sendMessage(sender, ChatColor.DARK_GREEN + "Item Information: ");
             ItemUtil.showInformation(stack, sender);
         }
