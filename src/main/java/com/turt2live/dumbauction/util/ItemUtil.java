@@ -305,7 +305,7 @@ public class ItemUtil {
         else if (type == PotionEffectType.INVISIBILITY)
             return "Invisibility";
         else if (type == PotionEffectType.NIGHT_VISION)
-            return "Night Vison";
+            return "Night Vision";
 
         return "Unknown Potion Effect";
     }
