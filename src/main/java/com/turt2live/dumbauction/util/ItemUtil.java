@@ -445,12 +445,8 @@ public class ItemUtil {
      */
     public static String getName(ItemStack item, boolean ignoreMeta) {
         String def = item.getType().name();
-        if (DumbAuction.getInstance().getWhatIsIt() != null) {
-            def = DumbAuction.getInstance().getWhatIsIt().getName(item);
-        } else {
-            if (DumbAuction.getInstance().getConfig().getString("aliases." + item.getType().name()) != null) {
-                def = DumbAuction.getInstance().getConfig().getString("aliases." + item.getType().name());
-            }
+        if (DumbAuction.getInstance().getConfig().getString("aliases." + item.getType().name()) != null) {
+            def = DumbAuction.getInstance().getConfig().getString("aliases." + item.getType().name());
         }
 
         DyeColor color = getDyeColor(item);

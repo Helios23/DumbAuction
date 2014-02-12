@@ -32,7 +32,6 @@ public class DumbAuction extends DumbPlugin {
     private Economy economy;
     private AuctionManager auctions;
     private List<String> ignoreBroadcast = new ArrayList<String>();
-    private WhatIsItHook whatHook;
     private StoreRegistry rewardStores;
     private MobArenaHook maHook;
 
@@ -64,10 +63,6 @@ public class DumbAuction extends DumbPlugin {
         getServer().getPluginManager().registerEvents(new InternalListener(), this);
 
         auctions = new AuctionManager();
-
-        if (getServer().getPluginManager().getPlugin("WhatIsIt") != null) {
-            whatHook = new WhatIsItHook();
-        }
 
         if (getServer().getPluginManager().getPlugin("MobArena") != null) {
             try {
@@ -155,15 +150,6 @@ public class DumbAuction extends DumbPlugin {
      */
     public static DumbAuction getInstance() {
         return p;
-    }
-
-    /**
-     * Gets the WhatIsIt Hook, if present
-     *
-     * @return the hook, or null if not loaded
-     */
-    public WhatIsItHook getWhatIsIt() {
-        return whatHook;
     }
 
     /**

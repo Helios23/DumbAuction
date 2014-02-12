@@ -32,13 +32,6 @@
             <version>${vault.version}</version>
         </dependency>
 
-        <!-- WhatIsIt -->
-        <dependency>
-            <groupId>com.turt2live.lib</groupId>
-            <artifactId>WhatIsIt</artifactId>
-            <version>1.3.7</version>
-        </dependency>
-
         <!-- MobArena -->
         <dependency>
             <groupId>com.turt2live.lib</groupId>
