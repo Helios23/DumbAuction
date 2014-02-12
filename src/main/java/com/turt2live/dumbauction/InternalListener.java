@@ -20,7 +20,7 @@ public class InternalListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAuctionStart(AuctionStartEvent event) {
-        String seller = event.getAuction().getSeller();
+        String seller = plugin.getConfig().getBoolean("auctions.use-displayname", true) ? event.getAuction().getSeller() : event.getAuction().getRealSeller();
         String startCost = plugin.getEconomy().format(event.getAuction().getMinimumBid());
         String bidIncrement = plugin.getEconomy().format(event.getAuction().getBidIncrement());
         String time = event.getAuction().getRequiredTime() + " seconds";
@@ -78,7 +78,7 @@ public class InternalListener implements Listener {
     public void onAuctionReward(AuctionRewardEvent event) {
         Auction auction = event.getAuction();
         String rewardee = event.getRewardee();
-        if (!auction.getSeller().equalsIgnoreCase(rewardee)) {
+        if (!auction.getRealSeller().equalsIgnoreCase(rewardee)) {
             plugin.broadcast(ChatColor.AQUA + rewardee + ChatColor.GRAY + " has won the auction with " + ChatColor.AQUA + plugin.getEconomy().format(auction.getHighestBid().getAmount()));
         }
     }

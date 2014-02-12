@@ -24,22 +24,25 @@ public class Auction {
     private List<Bid> bids = new ArrayList<Bid>();
     private long time;
     private String seller;
+    private String realSeller;
     private boolean wasCancelled = false;
 
     /**
      * Creates a new auction
      *
      * @param seller        the seller
+     * @param realSeller    the real seller's name
      * @param startingPrice the starting price of the auction
      * @param bidIncrement  the bid increment for the auction
      * @param time          the time required for the auction
      * @param amount        the amount of the item to auction
      * @param item          the template item to auction
      */
-    public Auction(String seller, double startingPrice, double bidIncrement, long time, int amount, ItemStack item) {
-        if (seller == null || startingPrice <= 0 || bidIncrement <= 0 || time <= 0 || amount <= 0 || item == null)
+    public Auction(String seller, String realSeller, double startingPrice, double bidIncrement, long time, int amount, ItemStack item) {
+        if (seller == null || realSeller == null || startingPrice <= 0 || bidIncrement <= 0 || time <= 0 || amount <= 0 || item == null)
             throw new IllegalArgumentException();
         this.seller = seller;
+        this.realSeller = realSeller;
         this.minimumBid = startingPrice;
         this.bidIncrement = bidIncrement;
         this.time = time;
@@ -48,6 +51,15 @@ public class Auction {
 
         // Just in case...
         this.templateItem.setAmount(1);
+    }
+
+    /**
+     * Gets the real name for the seller of this auction
+     *
+     * @return the auction seller's real name
+     */
+    public String getRealSeller() {
+        return realSeller;
     }
 
     /**

@@ -72,6 +72,8 @@ auctions:
     allow-renamed-items: true
     # If true, DumbAuction will deny the highest bidder and the auctioneer from changing gamemodes
     allow-gamemode-change: false
+    # If true, DumbAuction will use the player's display name (nickname) when showing information
+    use-displayname: false
     # Item types to blacklist
     blacklist:
     - AIR

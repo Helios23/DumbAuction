@@ -58,12 +58,13 @@ public class AuctionManager {
      * @return the auction, or null if none found
      */
     public Auction getAuctionBySeller(String seller) {
+        if (!hasAuction(seller)) return null;
         for (Auction auction : auctions) {
-            if (auction.getSeller().equalsIgnoreCase(seller)) {
+            if (auction.getRealSeller().equalsIgnoreCase(seller)) {
                 return auction;
             }
         }
-        if (activeAuction != null && activeAuction.getSeller().equalsIgnoreCase(seller))
+        if (activeAuction != null && activeAuction.getRealSeller().equalsIgnoreCase(seller))
             return activeAuction;
         return null;
     }
@@ -76,11 +77,11 @@ public class AuctionManager {
      */
     public boolean hasAuction(String seller) {
         for (Auction auction : auctions) {
-            if (auction.getSeller().equalsIgnoreCase(seller)) {
+            if (auction.getRealSeller().equalsIgnoreCase(seller)) {
                 return true;
             }
         }
-        if (activeAuction != null && activeAuction.getSeller().equalsIgnoreCase(seller))
+        if (activeAuction != null && activeAuction.getRealSeller().equalsIgnoreCase(seller))
             return true;
         return false;
     }
@@ -224,11 +225,11 @@ public class AuctionManager {
         if (auction != null) {
             if (auctions.size() < maxQueueSize) {
                 for (Auction auction1 : auctions) {
-                    if (auction1.getSeller().equalsIgnoreCase(auction.getSeller())) {
+                    if (auction1.getRealSeller().equalsIgnoreCase(auction.getRealSeller())) {
                         return false;
                     }
                 }
-                if (activeAuction != null && activeAuction.getSeller().equalsIgnoreCase(auction.getSeller())) {
+                if (activeAuction != null && activeAuction.getRealSeller().equalsIgnoreCase(auction.getRealSeller())) {
                     return false;
                 }
                 return true;
@@ -292,13 +293,13 @@ public class AuctionManager {
      */
     public int getPosition(Auction auction) {
         if (auction == null) throw new IllegalArgumentException();
-        if (activeAuction != null && auction.getSeller().equalsIgnoreCase(activeAuction.getSeller())) {
+        if (activeAuction != null && auction.getRealSeller().equalsIgnoreCase(activeAuction.getRealSeller())) {
             return 0;
         }
         int i = 0;
         for (Auction auction1 : auctions) {
             i++;
-            if (auction.getSeller().equalsIgnoreCase(auction1.getSeller())) {
+            if (auction.getRealSeller().equalsIgnoreCase(auction1.getRealSeller())) {
                 return i;
             }
         }
@@ -330,12 +331,12 @@ public class AuctionManager {
         boolean found = false;
         boolean isActive = false;
         for (Auction auction1 : auctions) {
-            if (auction1.getSeller().equalsIgnoreCase(auction.getSeller())) {
+            if (auction1.getRealSeller().equalsIgnoreCase(auction.getRealSeller())) {
                 found = true;
                 break;
             }
         }
-        if (activeAuction != null && activeAuction.getSeller().equalsIgnoreCase(auction.getSeller())) {
+        if (activeAuction != null && activeAuction.getRealSeller().equalsIgnoreCase(auction.getRealSeller())) {
             found = true;
             isActive = true;
         }
@@ -393,12 +394,12 @@ public class AuctionManager {
         boolean found = false;
         boolean isActive = false;
         for (Auction auction1 : auctions) {
-            if (auction1.getSeller().equalsIgnoreCase(auction.getSeller())) {
+            if (auction1.getRealSeller().equalsIgnoreCase(auction.getRealSeller())) {
                 found = true;
                 break;
             }
         }
-        if (activeAuction != null && activeAuction.getSeller().equalsIgnoreCase(auction.getSeller())) {
+        if (activeAuction != null && activeAuction.getRealSeller().equalsIgnoreCase(auction.getRealSeller())) {
             found = true;
             isActive = true;
         }

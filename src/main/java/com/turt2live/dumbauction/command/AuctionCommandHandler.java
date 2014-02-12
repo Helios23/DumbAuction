@@ -211,7 +211,7 @@ public class AuctionCommandHandler implements CommandExecutor {
             plugin.sendMessage(sender, ChatColor.RED + "You do not have enough to bid on that!");
             return true;
         }
-        if (auction.getSeller().equalsIgnoreCase(sender.getName())) {
+        if (auction.getRealSeller().equalsIgnoreCase(sender.getName())) {
             plugin.sendMessage(sender, ChatColor.RED + "You can't bid on your own auction!");
             return true;
         }
@@ -266,7 +266,7 @@ public class AuctionCommandHandler implements CommandExecutor {
         if (active == null) {
             plugin.sendMessage(sender, ChatColor.RED + "There is no active auction!");
         } else {
-            if (active.getSeller().equalsIgnoreCase(sender.getName()) || sender.hasPermission("dumbauction.admin")) {
+            if (active.getRealSeller().equalsIgnoreCase(sender.getName()) || sender.hasPermission("dumbauction.admin")) {
                 if (plugin.getAuctionManager().cancelAuction(active, sender))
                     plugin.sendMessage(sender, ChatColor.GREEN + "Auction cancelled.");
                 else
@@ -314,7 +314,7 @@ public class AuctionCommandHandler implements CommandExecutor {
             ItemStack stack = auction.getTemplateItem().clone();
             stack.setAmount(auction.getItemAmount());
 
-            String seller = auction.getSeller();
+            String seller = plugin.getConfig().getBoolean("auctions.use-displayname", true) ? auction.getSeller() : auction.getRealSeller();
             String startCost = plugin.getEconomy().format(auction.getMinimumBid());
             String bidIncrement = plugin.getEconomy().format(auction.getBidIncrement());
             String time = plugin.getAuctionManager().getAuctionTimeLeft() + " seconds";
@@ -514,7 +514,7 @@ public class AuctionCommandHandler implements CommandExecutor {
         }
 
         // Attempt to add the auction
-        Auction auction = new Auction(sender.getName(), startPrice, increment, time, amount, hand);
+        Auction auction = new Auction(player.getDisplayName(), sender.getName(), startPrice, increment, time, amount, hand);
         if (plugin.getAuctionManager().submitAuction(auction)) {
             plugin.sendMessage(sender, ChatColor.GREEN + "Your auction has been queued as " + ChatColor.DARK_GREEN + "#" + plugin.getAuctionManager().getPosition(auction));
         } else {
