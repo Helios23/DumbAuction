@@ -334,6 +334,26 @@ public class AuctionCommandHandler implements CommandExecutor {
 
     @Command(
             root = "auction",
+            subArgument = "buy",
+            alternateSubArgs = {"buynow"},
+            usage = "/auc buy",
+            permission = "dumbauction.auction",
+            playersOnly = true
+    )
+    public boolean auctionBuyCommand(CommandSender sender, Map<String, Object> arguments) {
+        Player player = (Player) sender; // Validated by @Command
+        if (!plugin.getAuctionManager().canBuyNow()) {
+            plugin.sendMessage(sender, ChatColor.RED + "Sorry! This auction cannot be purchased at this time.");
+        } else {
+            if (!plugin.getAuctionManager().buyNow(player)) {
+                plugin.sendMessage(sender, ChatColor.RED + "Buying failed. Do you have enough funds?");
+            }
+        }
+        return true;
+    }
+
+    @Command(
+            root = "auction",
             subArgument = "pause",
             alternateSubArgs = {"stop", "halt", "wait"},
             usage = "/auc pause",

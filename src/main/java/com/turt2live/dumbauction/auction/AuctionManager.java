@@ -96,6 +96,36 @@ public class AuctionManager {
     }
 
     /**
+     * Determines if the active auction, if any, can be purchased immediately
+     *
+     * @return true if the active auction, if any, can be purchased
+     */
+    public boolean canBuyNow() {
+        if (activeAuction != null && plugin.getConfig().getBoolean("auctions.allow-buy-now", true) && !isPaused()) {
+            return activeAuction.getHighestBid() == null;
+        }
+        return false;
+    }
+
+    /**
+     * Buys the active auction as the passed player
+     *
+     * @param player the player, cannot be null
+     * @return true if the auction was purchased
+     */
+    public boolean buyNow(Player player) {
+        if (player == null) throw new IllegalArgumentException();
+        if (!canBuyNow()) return false;
+        if (!plugin.getEconomy().has(player.getName(), activeAuction.getMinimumBid())) return false;
+        boolean bid = activeAuction.submitBid(new BuyingBid(player.getName(), activeAuction.getMinimumBid()));
+        if (bid) {
+            this.auctionTimeLeft = -1;
+            tick();
+        }
+        return bid;
+    }
+
+    /**
      * Sets whether or not the auction manager is paused
      *
      * @param paused paused status

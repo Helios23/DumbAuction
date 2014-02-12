@@ -1,6 +1,7 @@
 package com.turt2live.dumbauction;
 
 import com.turt2live.dumbauction.auction.Auction;
+import com.turt2live.dumbauction.auction.BuyingBid;
 import com.turt2live.dumbauction.event.*;
 import com.turt2live.dumbauction.rewards.RewardStore;
 import com.turt2live.dumbauction.util.ItemUtil;
@@ -70,7 +71,11 @@ public class InternalListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAuctionBid(AuctionBidEvent event) {
         if (event.getClass().equals(AuctionBidEvent.class)) {
-            plugin.broadcast(ChatColor.AQUA + event.getBid().getBidder() + ChatColor.GRAY + " has bid " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
+            if (event.getBid() instanceof BuyingBid) {
+                plugin.broadcast(ChatColor.AQUA + event.getBid().getBidder() + ChatColor.GRAY + " has purchased the auction for " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
+            } else {
+                plugin.broadcast(ChatColor.AQUA + event.getBid().getBidder() + ChatColor.GRAY + " has bid " + ChatColor.AQUA + plugin.getEconomy().format(event.getBid().getAmount()));
+            }
         }
     }
 

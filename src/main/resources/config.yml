@@ -74,6 +74,8 @@ auctions:
     allow-gamemode-change: false
     # If true, DumbAuction will use the player's display name (nickname) when showing information
     use-displayname: false
+    # If true, the "buy now" command is enabled (/auc buy)
+    allow-buy-now: true
     # Item types to blacklist
     blacklist:
     - AIR
