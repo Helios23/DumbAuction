@@ -102,8 +102,7 @@ public class AuctionCommandHandler implements CommandExecutor {
             return true;
         }
         if (args.length < 1) {
-            plugin.sendMessage(sender, ChatColor.RED + "Did you mean " + ChatColor.YELLOW + "/" + command.getName() + " help" + ChatColor.RED + "?");
-            return true;
+            args = new String[]{"help"}; // Force help command
         }
         for (CommandInfo handler : commandHandlers) {
             Command annotation = handler.annotation;
@@ -225,6 +224,31 @@ public class AuctionCommandHandler implements CommandExecutor {
             plugin.sendMessage(sender, ChatColor.RED + "Could not submit bid!");
         }
         // No need to tell them they bid, it will be posted in chat...
+        return true;
+    }
+
+    @Command(
+            root = "auction",
+            subArgument = "help",
+            alternateSubArgs = {"wat", "how", "?", "wtf"},
+            usage = "/auc help",
+            permission = Command.NO_PERMISSION
+    )
+    public boolean auctionHelpCommand(CommandSender sender, Map<String, Object> arguments) {
+        if (sender.hasPermission("dumbauction.auction")) {
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc start [amount] [starting price] [bid increment] [time]" + ChatColor.GRAY + " - Starts an auction");
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc info" + ChatColor.GRAY + " - Displays auction information");
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc showqueue" + ChatColor.GRAY + " - Displays the auction queue");
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc cancel" + ChatColor.GRAY + " - Cancels an auction");
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc stfu" + ChatColor.GRAY + " - Toggles auction spam for you only");
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc buy" + ChatColor.GRAY + " - Purchases the auction, if possible");
+        }
+        if (sender.hasPermission("dumbauction.admin")) {
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc pause" + ChatColor.GRAY + " - Pauses auctions globally");
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc resume" + ChatColor.GRAY + " - Resumes auctions globally");
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc impound" + ChatColor.GRAY + " - Impounds the current auction");
+            plugin.sendMessage(sender, ChatColor.AQUA + "/auc reload" + ChatColor.GRAY + " - Reloads the configuration");
+        }
         return true;
     }
 
