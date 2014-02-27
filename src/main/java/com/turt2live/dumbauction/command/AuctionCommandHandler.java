@@ -320,6 +320,9 @@ public class AuctionCommandHandler implements CommandExecutor {
             stack.setAmount(auction1.getItemAmount());
             ItemUtil.showQuickInformation(stack, sender, plugin.getAuctionManager().getPosition(auction1));
         }
+        if (plugin.getAuctionManager().getActiveAuction() == null && plugin.getAuctionManager().getAuctions().size() <= 0) {
+            plugin.sendMessage(sender, ChatColor.RED + "There is nothing in the queue.");
+        }
         return true;
     }
 
