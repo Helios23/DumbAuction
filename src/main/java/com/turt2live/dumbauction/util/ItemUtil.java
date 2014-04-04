@@ -272,41 +272,41 @@ public class ItemUtil {
     public static String getPotionEffectName(PotionEffectType type) {
         if (type == null) throw new IllegalArgumentException();
 
-        if (type == PotionEffectType.DAMAGE_RESISTANCE)
+        if (type.equals(PotionEffectType.DAMAGE_RESISTANCE))
             return "Damage Resistance";
-        else if (type == PotionEffectType.BLINDNESS)
+        else if (type.equals(PotionEffectType.BLINDNESS))
             return "Blindness";
-        else if (type == PotionEffectType.FAST_DIGGING)
+        else if (type.equals(PotionEffectType.FAST_DIGGING))
             return "Haste";
-        else if (type == PotionEffectType.FIRE_RESISTANCE)
+        else if (type.equals(PotionEffectType.FIRE_RESISTANCE))
             return "Fire Resistance";
-        else if (type == PotionEffectType.HARM)
+        else if (type.equals(PotionEffectType.HARM))
             return "Harming";
-        else if (type == PotionEffectType.HEAL)
+        else if (type.equals(PotionEffectType.HEAL))
             return "Healing";
-        else if (type == PotionEffectType.HUNGER)
+        else if (type.equals(PotionEffectType.HUNGER))
             return "Hunger";
-        else if (type == PotionEffectType.JUMP)
+        else if (type.equals(PotionEffectType.JUMP))
             return "Jump Boost";
-        else if (type == PotionEffectType.POISON)
+        else if (type.equals(PotionEffectType.POISON))
             return "Poison";
-        else if (type == PotionEffectType.REGENERATION)
+        else if (type.equals(PotionEffectType.REGENERATION))
             return "Regeneration";
-        else if (type == PotionEffectType.SLOW)
+        else if (type.equals(PotionEffectType.SLOW))
             return "Slowness";
-        else if (type == PotionEffectType.SPEED)
+        else if (type.equals(PotionEffectType.SPEED))
             return "Swiftness";
-        else if (type == PotionEffectType.INCREASE_DAMAGE)
+        else if (type.equals(PotionEffectType.INCREASE_DAMAGE))
             return "Strength";
-        else if (type == PotionEffectType.WATER_BREATHING)
+        else if (type.equals(PotionEffectType.WATER_BREATHING))
             return "Water Breathing";
-        else if (type == PotionEffectType.WEAKNESS)
+        else if (type.equals(PotionEffectType.WEAKNESS))
             return "Weakness";
-        else if (type == PotionEffectType.WITHER)
+        else if (type.equals(PotionEffectType.WITHER))
             return "Wither";
-        else if (type == PotionEffectType.INVISIBILITY)
+        else if (type.equals(PotionEffectType.INVISIBILITY))
             return "Invisibility";
-        else if (type == PotionEffectType.NIGHT_VISION)
+        else if (type.equals(PotionEffectType.NIGHT_VISION))
             return "Night Vision";
 
         return "Unknown Potion Effect";
@@ -321,47 +321,47 @@ public class ItemUtil {
     public static String getEnchantmentName(Enchantment enchantment) {
         if (enchantment == null) throw new IllegalArgumentException();
 
-        if (enchantment == Enchantment.DAMAGE_ALL)
+        if (enchantment.equals(Enchantment.DAMAGE_ALL))
             return "Sharpness";
-        else if (enchantment == Enchantment.DAMAGE_ARTHROPODS)
+        else if (enchantment.equals(Enchantment.DAMAGE_ARTHROPODS))
             return "Bane of Arthropods";
-        else if (enchantment == Enchantment.DAMAGE_UNDEAD)
+        else if (enchantment.equals(Enchantment.DAMAGE_UNDEAD))
             return "Smite";
-        else if (enchantment == Enchantment.DIG_SPEED)
+        else if (enchantment.equals(Enchantment.DIG_SPEED))
             return "Efficiency";
-        else if (enchantment == Enchantment.DURABILITY)
+        else if (enchantment.equals(Enchantment.DURABILITY))
             return "Unbreaking";
-        else if (enchantment == Enchantment.FIRE_ASPECT)
+        else if (enchantment.equals(Enchantment.FIRE_ASPECT))
             return "Fire Aspect";
-        else if (enchantment == Enchantment.KNOCKBACK)
+        else if (enchantment.equals(Enchantment.KNOCKBACK))
             return "Knockback";
-        else if (enchantment == Enchantment.LOOT_BONUS_BLOCKS)
+        else if (enchantment.equals(Enchantment.LOOT_BONUS_BLOCKS))
             return "Fortune";
-        else if (enchantment == Enchantment.LOOT_BONUS_MOBS)
+        else if (enchantment.equals(Enchantment.LOOT_BONUS_MOBS))
             return "Looting";
-        else if (enchantment == Enchantment.OXYGEN)
+        else if (enchantment.equals(Enchantment.OXYGEN))
             return "Respiration";
-        else if (enchantment == Enchantment.PROTECTION_ENVIRONMENTAL)
+        else if (enchantment.equals(Enchantment.PROTECTION_ENVIRONMENTAL))
             return "Protection";
-        else if (enchantment == Enchantment.PROTECTION_EXPLOSIONS)
+        else if (enchantment.equals(Enchantment.PROTECTION_EXPLOSIONS))
             return "Blast Protection";
-        else if (enchantment == Enchantment.PROTECTION_FALL)
+        else if (enchantment.equals(Enchantment.PROTECTION_FALL))
             return "Feather Falling";
-        else if (enchantment == Enchantment.PROTECTION_FIRE)
+        else if (enchantment.equals(Enchantment.PROTECTION_FIRE))
             return "Fire Protection";
-        else if (enchantment == Enchantment.PROTECTION_PROJECTILE)
+        else if (enchantment.equals(Enchantment.PROTECTION_PROJECTILE))
             return "Projectile Protection";
-        else if (enchantment == Enchantment.SILK_TOUCH)
+        else if (enchantment.equals(Enchantment.SILK_TOUCH))
             return "Silk Touch";
-        else if (enchantment == Enchantment.WATER_WORKER)
+        else if (enchantment.equals(Enchantment.WATER_WORKER))
             return "Aqua Affinity";
-        else if (enchantment == Enchantment.ARROW_FIRE)
+        else if (enchantment.equals(Enchantment.ARROW_FIRE))
             return "Fire Arrows";
-        else if (enchantment == Enchantment.ARROW_DAMAGE)
+        else if (enchantment.equals(Enchantment.ARROW_DAMAGE))
             return "Power";
-        else if (enchantment == Enchantment.ARROW_KNOCKBACK)
+        else if (enchantment.equals(Enchantment.ARROW_KNOCKBACK))
             return "Punch";
-        else if (enchantment == Enchantment.ARROW_INFINITE)
+        else if (enchantment.equals(Enchantment.ARROW_INFINITE))
             return "Infinity";
 
         return "Unknown Enchantment";
