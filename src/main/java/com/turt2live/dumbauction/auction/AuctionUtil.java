@@ -62,11 +62,6 @@ public class AuctionUtil {
             }
         }
 
-        Bid highestBid = auction.getHighestBid();
-        if (highestBid != null) {
-            DumbAuction.getInstance().getEconomy().depositPlayer(player, highestBid.getAmount());
-        }
-
         return true;
     }
 

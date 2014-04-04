@@ -408,6 +408,10 @@ public class AuctionManager {
                     currentDowntime = downtimeTicks;
                     plugin.getServer().getPluginManager().callEvent(new AuctionEndEvent(activeAuction));
                     AuctionUtil.rewardItems(activeAuction);
+
+                    if (activeAuction.getHighestBid() != null)
+                        plugin.getEconomy().depositPlayer(activeAuction.getRealSeller(), activeAuction.getHighestBid().getAmount());
+
                     activeAuction = null;
                 }
             }
