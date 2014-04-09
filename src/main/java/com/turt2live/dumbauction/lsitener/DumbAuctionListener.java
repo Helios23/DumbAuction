@@ -1,5 +1,6 @@
-package com.turt2live.dumbauction;
+package com.turt2live.dumbauction.lsitener;
 
+import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.auction.Auction;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

@@ -1,5 +1,6 @@
-package com.turt2live.dumbauction;
+package com.turt2live.dumbauction.lsitener;
 
+import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.auction.Auction;
 import com.turt2live.dumbauction.auction.BuyingBid;
 import com.turt2live.dumbauction.event.*;

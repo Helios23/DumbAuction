@@ -1,7 +1,8 @@
-package com.turt2live.dumbauction;
+package com.turt2live.dumbauction.hook;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.garbagemule.MobArena.events.ArenaPlayerLeaveEvent;
+import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.rewards.OfflineStore;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ public class MobArenaHook extends OfflineStore implements Listener {
 
     public MobArenaHook() throws IOException, InvalidConfigurationException {
         super(DumbAuction.getInstance(), "mobarena.yml");
-        // Events registered in super
+        // Events registered in super (OfflineStore)
     }
 
     public boolean isInArena(DumbAuction plugin, Player player) {
