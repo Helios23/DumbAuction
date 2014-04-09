@@ -1,4 +1,4 @@
-package com.turt2live.dumbauction.lsitener;
+package com.turt2live.dumbauction.listener;
 
 import com.turt2live.dumbauction.DumbAuction;
 import com.turt2live.dumbauction.auction.Auction;
