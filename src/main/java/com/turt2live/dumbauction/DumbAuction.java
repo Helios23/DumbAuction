@@ -85,12 +85,12 @@ public class DumbAuction extends DumbPlugin {
 
     @Override
     public void onDisable() {
-        p = null;
         if (auctions != null) auctions.stop(); // Returns items
         if (rewardStores != null) rewardStores.save();
 
         getConfig().set("ignore-broadcast", ignoreBroadcast);
         saveConfig();
+        p = null;
     }
 
     public StoreRegistry getRewardStores() {
