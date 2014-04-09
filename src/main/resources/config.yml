@@ -76,6 +76,8 @@ auctions:
     use-displayname: false
     # If true, the "buy now" command is enabled (/auc buy)
     allow-buy-now: true
+    # If false, the highest bidder and the auctioneer cannot change worlds
+    allow-world-change: true
     # Item types to blacklist
     blacklist:
     - AIR
