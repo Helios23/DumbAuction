@@ -54,6 +54,7 @@ public class DumbAuction extends DumbPlugin {
         });
 
         getServer().getPluginManager().registerEvents(new InternalListener(), this);
+        getServer().getPluginManager().registerEvents(new DumbAuctionListener(), this);
 
         auctions = new AuctionManager();
 
