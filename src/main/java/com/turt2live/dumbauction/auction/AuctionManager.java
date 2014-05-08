@@ -346,7 +346,7 @@ public class AuctionManager {
     }
 
     /**
-     * Cancels an auction as a specified CommandSender. To cancel for a utils reason, use {@link #cancelAuction(Auction)}
+     * Cancels an auction as a specified CommandSender. To cancel for a generic reason, use {@link #cancelAuction(Auction)}
      *
      * @param auction   the auction to cancel, cannot be null
      * @param canceller the canceller, cannot be null
