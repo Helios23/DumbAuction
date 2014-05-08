@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class MobArenaHook extends OfflineStore implements Listener {
 
@@ -34,14 +35,14 @@ public class MobArenaHook extends OfflineStore implements Listener {
         DumbAuction.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(DumbAuction.getInstance(), new Runnable() {
             @Override
             public void run() {
-                distributeStore(event.getPlayer().getName(), null); // Message handled internally
+                distributeStore(event.getPlayer().getUniqueId(), null); // Message handled internally
             }
         }, 5L);
     }
 
     @Override
-    public boolean isApplicable(String player) {
-        if (DumbAuction.getInstance().getServer().getPlayerExact(player) == null) return false;
-        return isInArena(DumbAuction.getInstance(), DumbAuction.getInstance().getServer().getPlayerExact(player));
+    public boolean isApplicable(UUID player) {
+        if (DumbAuction.getInstance().getServer().getPlayer(player) == null) return false;
+        return isInArena(DumbAuction.getInstance(), DumbAuction.getInstance().getServer().getPlayer(player));
     }
 }

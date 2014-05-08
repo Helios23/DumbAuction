@@ -2,6 +2,7 @@ package com.turt2live.dumbauction.rewards;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents a store registry
@@ -39,7 +40,7 @@ public class StoreRegistry {
      * @param player the player to look for, cannot be null
      * @return the applicable store, or null if none found
      */
-    public RewardStore getApplicableStore(String player) {
+    public RewardStore getApplicableStore(UUID player) {
         if (player == null) throw new IllegalArgumentException();
         for (RewardStore store : stores) {
             if (store.isApplicable(player)) {

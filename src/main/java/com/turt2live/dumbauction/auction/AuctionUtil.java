@@ -48,9 +48,9 @@ public class AuctionUtil {
         player = event.getRewardee();
 
         Player onlinePlayer = DumbAuction.getInstance().getServer().getPlayerExact(player);
-        RewardStore store = DumbAuction.getInstance().getRewardStores().getApplicableStore(player);
+        RewardStore store = DumbAuction.getInstance().getRewardStores().getApplicableStore(onlinePlayer.getUniqueId());
         if (store != null) {
-            store.store(player, rewards);
+            store.store(onlinePlayer.getUniqueId(), rewards);
         } else {
             if (onlinePlayer != null) {
                 HashMap<Integer, ItemStack> overflow = onlinePlayer.getInventory().addItem(rewards.toArray(new ItemStack[0]));
@@ -84,9 +84,9 @@ public class AuctionUtil {
         DumbAuction.getInstance().getServer().getPluginManager().callEvent(new AuctionImpoundEvent(auction, player));
 
         Player onlinePlayer = DumbAuction.getInstance().getServer().getPlayerExact(player.getName());
-        RewardStore store = DumbAuction.getInstance().getRewardStores().getApplicableStore(player.getName());
+        RewardStore store = DumbAuction.getInstance().getRewardStores().getApplicableStore(player.getUniqueId());
         if (store != null) {
-            store.store(player.getName(), rewards);
+            store.store(player.getUniqueId(), rewards);
         } else {
             if (onlinePlayer != null) {
                 HashMap<Integer, ItemStack> overflow = onlinePlayer.getInventory().addItem(rewards.toArray(new ItemStack[0]));

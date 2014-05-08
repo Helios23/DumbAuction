@@ -13,6 +13,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 /**
  * Internal listener for plugin operation
  */
@@ -84,21 +86,22 @@ public class InternalListener implements Listener {
     public void onAuctionReward(AuctionRewardEvent event) {
         Auction auction = event.getAuction();
         String rewardee = event.getRewardee();
-        if (!auction.getRealSeller().equalsIgnoreCase(rewardee)) {
+        if (!auction.getRealSeller().equals(rewardee)) {
             plugin.broadcast(ChatColor.AQUA + rewardee + ChatColor.GRAY + " has won the auction with " + ChatColor.AQUA + plugin.getEconomy().format(auction.getHighestBid().getAmount()));
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onOverflow(RewardOverflowEvent event) {
-        Player player = plugin.getServer().getPlayerExact(event.getRewardee());
+        Player player = plugin.getServer().getPlayer(event.getRewardee());
         for (ItemStack item : event.getRewards()) {
             if (player != null) {
                 player.getWorld().dropItemNaturally(player.getLocation(), item);
             } else {
-                RewardStore store = plugin.getRewardStores().getApplicableStore(event.getRewardee());
+                UUID uuid = plugin.getServer().getOfflinePlayer(event.getRewardee()).getUniqueId();
+                RewardStore store = plugin.getRewardStores().getApplicableStore(uuid);
                 if (store != null) {
-                    store.store(event.getRewardee(), item);
+                    store.store(uuid, item);
                 }
             }
         }

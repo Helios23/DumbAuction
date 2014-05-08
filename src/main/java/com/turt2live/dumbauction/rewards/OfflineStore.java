@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class OfflineStore implements SavingStore, Listener {
 
-    private Map<String, List<ItemStack>> queue = new HashMap<String, List<ItemStack>>();
+    private Map<UUID, List<ItemStack>> queue = new HashMap<UUID, List<ItemStack>>();
     private File file;
 
     public OfflineStore(DumbAuction plugin) throws IOException, InvalidConfigurationException {
@@ -38,12 +38,12 @@ public class OfflineStore implements SavingStore, Listener {
         FileConfiguration config = new YamlConfiguration();
         config.load(file);
         if (config.getKeys(false) != null) {
-            for (String playerName : config.getKeys(false)) {
+            for (String playerUuid : config.getKeys(false)) {
                 List<ItemStack> items = new ArrayList<ItemStack>();
-                for (String key : config.getConfigurationSection(playerName).getKeys(false)) {
-                    items.add(config.getItemStack(playerName + "." + key));
+                for (String key : config.getConfigurationSection(playerUuid).getKeys(false)) {
+                    items.add(config.getItemStack(playerUuid + "." + key));
                 }
-                queue.put(playerName, items);
+                queue.put(UUID.fromString(playerUuid), items);
             }
         }
 
@@ -59,10 +59,10 @@ public class OfflineStore implements SavingStore, Listener {
             for (String key : configKeys) {
                 config.set(key, null);
             }
-            for (String key : queue.keySet()) {
+            for (UUID key : queue.keySet()) {
                 List<ItemStack> items = queue.get(key);
                 for (int i = 0; i < items.size(); i++) {
-                    config.set(key + "." + i, items.get(i));
+                    config.set(key.toString() + "." + i, items.get(i));
                 }
             }
             config.save(file);
@@ -74,17 +74,18 @@ public class OfflineStore implements SavingStore, Listener {
     }
 
     @Override
-    public void store(String playerName, ItemStack item) {
-        if (item == null || playerName == null) throw new IllegalArgumentException();
-        List<ItemStack> stacks = queue.get(playerName);
+    public void store(UUID uuid, ItemStack item) {
+        if (item == null || uuid == null) throw new IllegalArgumentException();
+        List<ItemStack> stacks = queue.get(uuid);
         if (stacks == null) stacks = new ArrayList<ItemStack>();
         stacks.add(item);
-        queue.put(playerName, stacks);
+        queue.put(uuid, stacks);
     }
 
     @Override
-    public boolean distributeStore(String player, Player distributeTo) {
-        if (distributeTo == null) distributeTo = DumbAuction.getInstance().getServer().getPlayerExact(player);
+    public boolean distributeStore(UUID player, Player distributeTo) {
+        if (player == null) throw new IllegalArgumentException();
+        if (distributeTo == null) distributeTo = DumbAuction.getInstance().getServer().getPlayer(player);
         List<ItemStack> queue = getStore(player);
         if (queue != null) {
             clearStore(player);
@@ -103,30 +104,31 @@ public class OfflineStore implements SavingStore, Listener {
     }
 
     @Override
-    public void store(String playerName, List<ItemStack> items) {
-        if (items == null || playerName == null) throw new IllegalArgumentException();
-        for (ItemStack stack : items) store(playerName, stack);
+    public void store(UUID player, List<ItemStack> items) {
+        if (items == null || player == null) throw new IllegalArgumentException();
+        for (ItemStack stack : items) store(player, stack);
     }
 
     @Override
-    public void clearStore(String playerName) {
-        if (playerName == null) throw new IllegalArgumentException();
-        queue.remove(playerName);
+    public void clearStore(UUID player) {
+        if (player == null) throw new IllegalArgumentException();
+        queue.remove(player);
     }
 
     @Override
-    public boolean isApplicable(String player) {
-        return DumbAuction.getInstance().getServer().getPlayerExact(player) == null;
+    public boolean isApplicable(UUID player) {
+        if (player == null) return false;
+        return DumbAuction.getInstance().getServer().getPlayer(player) == null;
     }
 
     @Override
-    public List<ItemStack> getStore(String playerName) {
-        if (playerName == null) throw new IllegalArgumentException();
-        return queue.get(playerName);
+    public List<ItemStack> getStore(UUID player) {
+        if (player == null) throw new IllegalArgumentException();
+        return queue.get(player);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        distributeStore(event.getPlayer().getName(), event.getPlayer());
+        distributeStore(event.getPlayer().getUniqueId(), event.getPlayer());
     }
 }
