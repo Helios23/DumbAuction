@@ -86,6 +86,11 @@ auctions:
     # The default list below is a random generated string for setup purposes
     word-blacklist:
     - bha2s8hgn223slaaksmnte
+    # A list of worlds to not allow auction commands in. This can be overriden by
+    # the administrators. Worlds not listed here will automatically be permitted to
+    # have auctions.
+    excluded-worlds:
+    - my_world_name_goes_here
 
 # Add items here to rename them from the Bukkit name, eg: DIAMOND_SWORD: 'Diamond Stick' to make "Diamond Stick" appear
 # instaed of "Diamond Sword". If you have WhatIsIt on your server, that is used instead.

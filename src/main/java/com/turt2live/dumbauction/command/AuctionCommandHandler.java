@@ -189,6 +189,19 @@ public class AuctionCommandHandler implements CommandExecutor {
         return false;
     }
 
+    private boolean canPerformCommandInWorld(CommandSender sender) {
+        if (!sender.hasPermission("dumbauction.admin")) {
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                List<String> blacklist = plugin.getConfig().getStringList("auctions.excluded-worlds");
+                if (blacklist != null && blacklist.contains(player.getWorld().getName())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     @Command(
             root = "auction",
             subArgument = "bid",
@@ -200,6 +213,11 @@ public class AuctionCommandHandler implements CommandExecutor {
             @Argument(index = 0, optional = true, subArgument = "amount", validator = DoubleValidator.class, validatorArguments = {"Please supply a valid amount!"})
     })
     public boolean auctionBidCommand(CommandSender sender, Map<String, Object> arguments) {
+        if (!canPerformCommandInWorld(sender)) {
+            plugin.sendMessage(sender, ChatColor.RED + "You cannot do that in this world.");
+            return true;
+        }
+
         Auction auction = plugin.getAuctionManager().getActiveAuction();
         if (auction == null) {
             plugin.sendMessage(sender, ChatColor.RED + "There is no active auction!");
@@ -286,6 +304,11 @@ public class AuctionCommandHandler implements CommandExecutor {
             permission = "dumbauction.auction"
     )
     public boolean auctionCancelCommand(CommandSender sender, Map<String, Object> arguments) {
+        if (!canPerformCommandInWorld(sender)) {
+            plugin.sendMessage(sender, ChatColor.RED + "You cannot do that in this world.");
+            return true;
+        }
+
         Auction active = plugin.getAuctionManager().getActiveAuction();
         if (active == null) {
             plugin.sendMessage(sender, ChatColor.RED + "There is no active auction!");
@@ -368,6 +391,11 @@ public class AuctionCommandHandler implements CommandExecutor {
             playersOnly = true
     )
     public boolean auctionBuyCommand(CommandSender sender, Map<String, Object> arguments) {
+        if (!canPerformCommandInWorld(sender)) {
+            plugin.sendMessage(sender, ChatColor.RED + "You cannot do that in this world.");
+            return true;
+        }
+
         Player player = (Player) sender; // Validated by @Command
         if (!plugin.getAuctionManager().canBuyNow()) {
             plugin.sendMessage(sender, ChatColor.RED + "Sorry! This auction cannot be purchased at this time.");
@@ -446,6 +474,11 @@ public class AuctionCommandHandler implements CommandExecutor {
             @Argument(index = 3, subArgument = "time", optional = true, validator = IntValidator.class, validatorArguments = {"Please supply a valid time"})
     })
     public boolean auctionStartCommand(CommandSender sender, Map<String, Object> arguments) {
+        if (!canPerformCommandInWorld(sender)) {
+            plugin.sendMessage(sender, ChatColor.RED + "You cannot do that in this world.");
+            return true;
+        }
+
         Player player = (Player) sender; // Validated by @Command
         ItemStack hand = player.getItemInHand();
         if (hand == null || hand.getType() == Material.AIR) {
