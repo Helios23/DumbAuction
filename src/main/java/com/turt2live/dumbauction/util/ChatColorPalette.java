@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Copyright (C) 2014 Travis Ralston (turt2live)
+ *
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
 package com.turt2live.dumbauction.util;
 
 import org.bukkit.ChatColor;
@@ -45,6 +62,7 @@ public final class ChatColorPalette {
      *
      * @param c1
      * @param c2
+     *
      * @return if they are a match
      */
     public static boolean areIdentical(Color c1, Color c2) {
@@ -61,6 +79,7 @@ public final class ChatColorPalette {
      * @param r The red component of the color.
      * @param b The blue component of the color.
      * @param g The green component of the color.
+     *
      * @return The index in the palette.
      */
     public static ChatColor matchColor(int r, int g, int b) {
@@ -72,6 +91,7 @@ public final class ChatColorPalette {
      * color.
      *
      * @param color The Color to match.
+     *
      * @return The ChatColor in the palette.
      */
     public static ChatColor matchColor(Color color) {

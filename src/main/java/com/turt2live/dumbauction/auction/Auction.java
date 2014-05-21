@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Copyright (C) 2014 Travis Ralston (turt2live)
+ *
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
 package com.turt2live.dumbauction.auction;
 
 import com.turt2live.dumbauction.DumbAuction;
@@ -156,6 +173,7 @@ public class Auction {
      * Determines if a bid can be accepted by this auction. This will not actually apply the bid.
      *
      * @param bid the bid to test, cannot be null
+     *
      * @return true if the bid would be accepted
      */
     public boolean canAccept(Bid bid) {
@@ -166,6 +184,7 @@ public class Auction {
      * Submits a bid to the auction
      *
      * @param bid the bid to submit, cannot be null
+     *
      * @return true on success. false if the bid was rejected
      */
     public boolean submitBid(Bid bid) {

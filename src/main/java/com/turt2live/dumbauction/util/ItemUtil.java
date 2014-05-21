@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Copyright (C) 2014 Travis Ralston (turt2live)
+ *
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
 package com.turt2live.dumbauction.util;
 
 import com.turt2live.dumbauction.DumbAuction;
@@ -31,6 +48,7 @@ public class ItemUtil {
      *
      * @param template  the template to use, amount is ignored
      * @param inventory the inventory to check
+     *
      * @return the total number of items this inventory contains
      */
     public static int getCount(ItemStack template, Inventory inventory) {
@@ -242,6 +260,7 @@ public class ItemUtil {
      * Gets the player-friendly name for a firework type
      *
      * @param type the type, cannot be null
+     *
      * @return the player-friendly name
      */
     public static String getFireworkTypeName(FireworkEffect.Type type) {
@@ -267,6 +286,7 @@ public class ItemUtil {
      * Gets the player-friendly name for a potion effect type
      *
      * @param type the potion effect type, cannot be null
+     *
      * @return the player-friendly name
      */
     public static String getPotionEffectName(PotionEffectType type) {
@@ -316,6 +336,7 @@ public class ItemUtil {
      * Gets the name for an enchantment
      *
      * @param enchantment the enchantment to lookup, cannot be null
+     *
      * @return the player-friendly name for the enchantment
      */
     public static String getEnchantmentName(Enchantment enchantment) {
@@ -430,6 +451,7 @@ public class ItemUtil {
      * Gets the name of the item passed
      *
      * @param item the item to check, cannot be null
+     *
      * @return the item name
      */
     public static String getName(ItemStack item) {
@@ -441,6 +463,7 @@ public class ItemUtil {
      *
      * @param item       the item to check, cannot be null
      * @param ignoreMeta if true, item meta will be ignored
+     *
      * @return the item name
      */
     public static String getName(ItemStack item, boolean ignoreMeta) {
@@ -475,6 +498,7 @@ public class ItemUtil {
      * Gets the dye color for a specified type of ItemStack.
      *
      * @param stack the stack to get the color of
+     *
      * @return the color of the stack, or null if not applicable (or invalid arguments)
      */
     public static DyeColor getDyeColor(ItemStack stack) {

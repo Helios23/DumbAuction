@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Copyright (C) 2014 Travis Ralston (turt2live)
+ *
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
 package com.turt2live.dumbauction.auction;
 
 import com.turt2live.dumbauction.DumbAuction;
@@ -54,6 +71,7 @@ public class AuctionManager {
      * Gets the auction a seller has in the queue. Will return null if {@link #hasAuction(String)} returns false
      *
      * @param seller the seller to lookup
+     *
      * @return the auction, or null if none found
      */
     public Auction getAuctionBySeller(String seller) {
@@ -72,6 +90,7 @@ public class AuctionManager {
      * Determines if a specified seller already has an auction in the queue
      *
      * @param seller the seller to lookup
+     *
      * @return true if the seller already has an acution in the queue
      */
     public boolean hasAuction(String seller) {
@@ -110,6 +129,7 @@ public class AuctionManager {
      * Buys the active auction as the passed player
      *
      * @param player the player, cannot be null
+     *
      * @return true if the auction was purchased
      */
     public boolean buyNow(Player player) {
@@ -128,6 +148,7 @@ public class AuctionManager {
      * Sets whether or not the auction manager is paused
      *
      * @param paused paused status
+     *
      * @return true if the paused state was set. Returns true if the passed state is the current state
      */
     public boolean setPaused(boolean paused) {
@@ -229,6 +250,7 @@ public class AuctionManager {
      * If this is passed a "0", the auction is ended on the next tick.
      *
      * @param auctionTimeLeft the number of seconds left for the auction
+     *
      * @throws IllegalArgumentException thrown if there is an active auction and the passed time is less than zero
      */
     public void setAuctionTimeLeft(long auctionTimeLeft) {
@@ -247,6 +269,7 @@ public class AuctionManager {
      * will also return false if the AuctionManager is paused
      *
      * @param auction
+     *
      * @return
      */
     public boolean canAccept(Auction auction) {
@@ -272,6 +295,7 @@ public class AuctionManager {
      * not accept the auction, this returns false.
      *
      * @param auction the auction to submit
+     *
      * @return true if the auction was added to the queue
      */
     public boolean submitAuction(Auction auction) {
@@ -317,7 +341,9 @@ public class AuctionManager {
      * </ul>
      *
      * @param auction the auction to test
+     *
      * @return the position of the auction
+     *
      * @throws IllegalArgumentException thrown if the passed auction is null
      */
     public int getPosition(Auction auction) {
@@ -339,6 +365,7 @@ public class AuctionManager {
      * Cancels an auction using magic
      *
      * @param auction the auction to cancel, cannot be null
+     *
      * @return true if the auction was cancelled
      */
     public boolean cancelAuction(Auction auction) {
@@ -350,6 +377,7 @@ public class AuctionManager {
      *
      * @param auction   the auction to cancel, cannot be null
      * @param canceller the canceller, cannot be null
+     *
      * @return true if the auction was cancelled
      */
     public boolean cancelAuction(Auction auction, CommandSender canceller) {

@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Copyright (C) 2014 Travis Ralston (turt2live)
+ *
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
 package com.turt2live.dumbauction.rewards;
 
 import org.bukkit.entity.Player;
@@ -34,6 +51,7 @@ public interface RewardStore {
      *
      * @param player       the player's store, cannot be null
      * @param distributeTo the player to distribute the store to. If null, the 'player' is assumed
+     *
      * @return true if items were distributed, false otherwise
      */
     public boolean distributeStore(UUID player, Player distributeTo);
@@ -42,6 +60,7 @@ public interface RewardStore {
      * Gets the store for a player
      *
      * @param player the player name
+     *
      * @return the store for the player
      */
     public List<ItemStack> getStore(UUID player);
@@ -57,6 +76,7 @@ public interface RewardStore {
      * Determines if this store is applicable for the player
      *
      * @param player the player to test, cannot be null
+     *
      * @return true if this store is applicable to the specified player
      */
     public boolean isApplicable(UUID player);
